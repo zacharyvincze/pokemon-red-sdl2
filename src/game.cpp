@@ -92,10 +92,10 @@ void Game::eventLoop() {
         last_update_time = current_time_ms;         // Update the update timer
 
         // Cap the frame rate
-        const int elapsed_time_ms = start_time_ms - SDL_GetTicks(); // Get the elapsed time
+        /*const int elapsed_time_ms = start_time_ms - SDL_GetTicks(); // Get the elapsed time
         if (elapsed_time_ms < (1000 / kFps)) {
             SDL_Delay(1000 / kFps - elapsed_time_ms);               // Delay the program to cap the frame rate
-        }
+        }*/
 
         // Render
         draw(graphics);
