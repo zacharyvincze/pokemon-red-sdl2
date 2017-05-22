@@ -1,4 +1,29 @@
-build:
-	g++ -o bin/pokemon src/*.cpp -framework SDL2 -framework SDL2_image
-run:
-	bin/pokemon
+CXX ?= g++-5.2
+MKDIR := mkdir -p
+CXXFLAGS += `pkg-config --cflags sdl2 SDL2_image`
+CXXFLAGS += -pedantic -std=c++11
+LDFLAGS += `pkg-config --libs sdl2 SDL2_image`
+PROG := bin/pokemon
+OBJS := $(patsubst src/%.cpp,obj/%.o, $(wildcard src/*.cpp))
+DEPS := $(OBJS:.o=.d)
+
+.PHONY: all clean
+
+all: build
+
+build: $(PROG)
+
+-include $(DEPS)
+
+clean:
+	rm -rf $(PROG) $(OBJS)
+
+$(PROG): $(OBJS)
+		@$(MKDIR) $(dir $@)
+		$(CXX) $^ $(CXXFLAGS) $(LDFLAGS) -o $@
+
+obj/%.o : src/%.cpp
+		@$(MKDIR) $(dir $@)
+		$(CXX) $< $(CXXFLAGS) -c -MD -o $@
+
+run: bin/./pokemon

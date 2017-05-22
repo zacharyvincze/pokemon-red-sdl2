@@ -10,6 +10,7 @@ class Sprite {
     public:
         Sprite();
         void load(Graphics& graphics, const std::string& filePath, int sourceX, int sourceY, int width, int height);
+        virtual void update(int) {}
         void draw(Graphics& graphics, int x, int y);
 
     protected:

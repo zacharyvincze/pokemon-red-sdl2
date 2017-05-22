@@ -7,6 +7,7 @@
 #include "graphics.h"
 #include "sprite.h"
 #include "camera.h"
+#include "animated_sprite.h"
 
 #include <chrono>
 
@@ -24,6 +25,7 @@ class Game {
 
         Tilemap tilemap;
         Map map;
+        AnimatedSprite animated_sprite;
         Sprite sprite;
         Camera camera;
 };

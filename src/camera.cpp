@@ -12,9 +12,9 @@
 
 // Camera constants
 namespace {
-    const float kCameraSpeed = 0.1f;   // Camera movement speed
-    const int kCameraWidth = 160;       // Viewport width
-    const int kCameraHeight = 144;      // Viewport height
+    const float kCameraSpeed = 0.05f;   // Camera movement speed
+    // const int kCameraWidth = 160;       // Viewport width
+    // const int kCameraHeight = 144;      // Viewport height
 }
 
 // Initialize the camera class

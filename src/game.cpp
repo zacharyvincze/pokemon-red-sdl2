@@ -12,7 +12,6 @@
 #include "input.h"
 #include "camera.h"
 #include "graphics.h"
-#include "sprite.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
@@ -43,7 +42,7 @@ void Game::eventLoop() {
 
     // Load sprites
     tilemap.load(graphics, "res/tileset.png");                                          // Load the tilemap
-    sprite.load(graphics, "res/sprites.png", 0, 0, Game::kTileSize, Game::kTileSize);   // Load the player sprite
+    animated_sprite.load(graphics, "res/sprites.png", 0, 0, Game::kTileSize, Game::kTileSize, 5, 4);   // Load the player sprite
     map.load(Map::PALETTE_TOWN);                                                        // Load the map
 
     SDL_Event event;    // SDL event handler
@@ -92,10 +91,10 @@ void Game::eventLoop() {
         last_update_time = current_time_ms;         // Update the update timer
 
         // Cap the frame rate
-        /*const int elapsed_time_ms = start_time_ms - SDL_GetTicks(); // Get the elapsed time
+        const int elapsed_time_ms = start_time_ms - SDL_GetTicks(); // Get the elapsed time
         if (elapsed_time_ms < (1000 / kFps)) {
             SDL_Delay(1000 / kFps - elapsed_time_ms);               // Delay the program to cap the frame rate
-        }*/
+        }
 
         // Render
         draw(graphics);
@@ -109,11 +108,12 @@ void Game::eventLoop() {
 
 void Game::update(int elapsed_time_ms) {
     camera.update(elapsed_time_ms);     // Update the camera's position
+    animated_sprite.update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
     map.draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
-    sprite.draw(graphics, 1 * Game::kTileSize, 2 * Game::kTileSize);    // Draw the player sprite
+    animated_sprite.draw(graphics, 1 * Game::kTileSize, 2 * Game::kTileSize);    // Draw the player sprite
     graphics.present();                                                 // Present the renderer
 }
