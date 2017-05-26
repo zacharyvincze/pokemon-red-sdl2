@@ -40,3 +40,7 @@ void Tilemap::draw(Graphics& graphics, int x, int y, int tileID) {
     destinationRectangle.y = y;                                             // Set destination rectangle Y
     graphics.render(mTilemap, &mTileClips[tileID], &destinationRectangle);  // Render the tile
 }
+
+void Tilemap::close() {
+    SDL_DestroyTexture(mTilemap);
+}

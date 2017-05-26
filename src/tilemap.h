@@ -45,6 +45,7 @@ class Tilemap {
 
         void draw(Graphics& graphics, int x, int y, int tileID);
         void load(Graphics& graphics, const std::string filePath);
+        void close();
 
     private:
         SDL_Texture* mTilemap;

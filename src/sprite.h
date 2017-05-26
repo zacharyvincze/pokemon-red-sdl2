@@ -8,10 +8,10 @@
 
 class Sprite {
     public:
-        Sprite();
-        void load(Graphics& graphics, const std::string& filePath, int sourceX, int sourceY, int width, int height);
+        Sprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height);
         virtual void update(int) {}
         void draw(Graphics& graphics, int x, int y);
+        void close();
 
     protected:
         SDL_Rect mSourceRect;

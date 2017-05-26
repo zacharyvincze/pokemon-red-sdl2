@@ -8,15 +8,8 @@
 
 #include "animated_sprite.h"
 
-AnimatedSprite::AnimatedSprite() {
-    mFrameTime = 0;
-    mNumFrames = 0;
-    mCurrentFrame = 0;
-    mElapsedTime = 0;
-}
-
-void AnimatedSprite::load(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height, int fps, int num_frames) {
-    Sprite::load(graphics, file_path, source_x, source_y, width, height);
+AnimatedSprite::AnimatedSprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height, int fps, int num_frames) :
+    Sprite(graphics, file_path, source_x, source_y, width, height) {
     mFrameTime = (1000 / fps);
     mNumFrames = num_frames;
     mCurrentFrame = 0;

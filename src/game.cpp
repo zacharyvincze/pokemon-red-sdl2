@@ -32,18 +32,20 @@ Game::Game() {
 
 // Quit the SDL subsystems
 Game::~Game() {
+    tilemap.close();
+    animated_sprite->close();
     IMG_Quit();
     SDL_Quit();
 }
 
 void Game::eventLoop() {
-    Graphics graphics;  // Object for handling graphics
+    Graphics graphics;
     Input input;        // Object for handling inputs
+    map = new Map();
+    animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, 16, Game::kTileSize, Game::kTileSize, 5, 4);
 
-    // Load sprites
-    tilemap.load(graphics, "res/tileset.png");                                          // Load the tilemap
-    animated_sprite.load(graphics, "res/sprites.png", 0, 0, Game::kTileSize, Game::kTileSize, 5, 4);   // Load the player sprite
-    map.load(Map::PALETTE_TOWN);                                                        // Load the map
+    tilemap.load(graphics, "res/tileset.png");
+    map->loadPaletteTown();
 
     SDL_Event event;    // SDL event handler
 
@@ -108,12 +110,12 @@ void Game::eventLoop() {
 
 void Game::update(int elapsed_time_ms) {
     camera.update(elapsed_time_ms);     // Update the camera's position
-    animated_sprite.update(elapsed_time_ms);
+    animated_sprite->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    map.draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
-    animated_sprite.draw(graphics, 1 * Game::kTileSize, 2 * Game::kTileSize);    // Draw the player sprite
+    map->draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
+    animated_sprite->draw(graphics, Game::kTileSize, Game::kTileSize * 2);
     graphics.present();                                                 // Present the renderer
 }

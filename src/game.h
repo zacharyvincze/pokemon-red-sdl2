@@ -23,11 +23,10 @@ class Game {
         void update(int elapsed_time_ms);
         void draw(Graphics& graphics);
 
-        Tilemap tilemap;
-        Map map;
-        AnimatedSprite animated_sprite;
-        Sprite sprite;
         Camera camera;
+        Tilemap tilemap;
+        Map* map;
+        AnimatedSprite* animated_sprite;
 };
 
 #endif // GAME_H

@@ -20,13 +20,10 @@ class Map {
         int getTile(int x, int y) { return map[y][x]; }
         int getSize() { return mTotalSize; }
 
-        void load(int mapID);
         void draw(Graphics& graphics, Tilemap& tilemap, int cameraX, int cameraY);
 
-        enum maps {
-            PALETTE_TOWN,
-            ROUTE_1
-        };
+        void loadPaletteTown();
+        void loadRoute1();
 
     private:
          std::vector<std::vector<int> > map;
@@ -37,7 +34,7 @@ class Map {
 
          void resize();
          void clear();
-
+         void insert(int temp[]);
 };
 
 #endif // MAP_H
