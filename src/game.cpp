@@ -32,28 +32,26 @@ Game::Game() {
 
 // Quit the SDL subsystems
 Game::~Game() {
-    tilemap.close();
-    animated_sprite->close();
-    IMG_Quit();
-    SDL_Quit();
+    close();
 }
 
 void Game::eventLoop() {
     Graphics graphics;
     Input input;        // Object for handling inputs
     map = new Map();
-    animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, 16, Game::kTileSize, Game::kTileSize, 5, 4);
+    animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, 5, 2);
 
     tilemap.load(graphics, "res/tileset.png");
-    map->loadPaletteTown();
+    map->load(Map::PALETTE_TOWN);
 
     SDL_Event event;    // SDL event handler
 
     bool running = true;                    // Loop flag
     int last_update_time = SDL_GetTicks();  // Initialize update timer
+    int frame_time;
 
     while(running) {
-        const int start_time_ms = SDL_GetTicks();   // Get start time
+        frame_time = SDL_GetTicks();   // Get start time
 
         // Get keydown and keyup events for the input object
         while(SDL_PollEvent(&event) != 0) {
@@ -92,14 +90,13 @@ void Game::eventLoop() {
         update(current_time_ms - last_update_time); // Pass the elapsed time to the update function
         last_update_time = current_time_ms;         // Update the update timer
 
-        // Cap the frame rate
-        const int elapsed_time_ms = start_time_ms - SDL_GetTicks(); // Get the elapsed time
-        if (elapsed_time_ms < (1000 / kFps)) {
-            SDL_Delay(1000 / kFps - elapsed_time_ms);               // Delay the program to cap the frame rate
-        }
-
         // Render
         draw(graphics);
+
+        // Cap the frame rate
+        if (SDL_GetTicks() - frame_time < MIN_FRAME_TIME) {
+            SDL_Delay(MIN_FRAME_TIME - (SDL_GetTicks() - frame_time));               // Delay the program to cap the frame rate
+        }
 
         // Measure frames per second
         /*const float seconds_per_frame = (SDL_GetTicks() - start_time_ms) / 1000.0;
@@ -116,6 +113,15 @@ void Game::update(int elapsed_time_ms) {
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
     map->draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
-    animated_sprite->draw(graphics, Game::kTileSize, Game::kTileSize * 2);
+    animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     graphics.present();                                                 // Present the renderer
+}
+
+void Game::close() {
+    tilemap.close();
+    animated_sprite->close();
+    delete animated_sprite;
+    delete map;
+    IMG_Quit();
+    SDL_Quit();
 }

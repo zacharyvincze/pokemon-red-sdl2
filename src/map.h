@@ -22,8 +22,12 @@ class Map {
 
         void draw(Graphics& graphics, Tilemap& tilemap, int cameraX, int cameraY);
 
-        void loadPaletteTown();
-        void loadRoute1();
+        void load(int map_id);
+
+        enum Maps {
+            PALETTE_TOWN,
+            ROUTE_1
+        };
 
     private:
          std::vector<std::vector<int> > map;
