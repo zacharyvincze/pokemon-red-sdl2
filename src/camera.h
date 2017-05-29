@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "map.h"
+#include "player.h"
 
 #include <chrono>
 
@@ -22,13 +23,15 @@ class Camera {
         void setY(int y) { mCameraPosY = y; }
         void setX(int x) { mCameraPosX = x; }
 
-        void update(int elapsed_time_ms);
+        void update(int elapsed_time_ms, Player& player, Map& map);
 
     private:
         int mCameraPosX;
         int mCameraPosY;
         float mCameraVelocityX;
         float mCameraVelocityY;
+        float mTempX;
+        float mTempY;
 };
 
 #endif // CAMERA_H

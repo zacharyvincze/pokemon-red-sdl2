@@ -12,9 +12,9 @@
 
 // Camera constants
 namespace {
-    const float kCameraSpeed = 0.06f;   // Camera movement speed
-    // const int kCameraWidth = 160;       // Viewport width
-    // const int kCameraHeight = 144;      // Viewport height
+    const float kCameraSpeed = 0.03f;   // Camera movement speed
+    const int kCameraWidth = 160;       // Viewport width
+    const int kCameraHeight = 144;      // Viewport height
 }
 
 // Initialize the camera class
@@ -46,9 +46,18 @@ void Camera::stopMoving() {
     mCameraVelocityY = 0;   // Reset the camera's Y velocity
 }
 
-void Camera::update(int elapsed_time_ms) {
-    mCameraPosX += round(mCameraVelocityX * elapsed_time_ms);   // Update the camera's X position
-    mCameraPosY += round(mCameraVelocityY * elapsed_time_ms);   // Update the camera's Y position
+void Camera::update(int elapsed_time_ms, Player& player, Map& map) {
+    if (mCameraPosX > 0 || mCameraPosX < map.getWidth() * 16) {
+        mTempX += mCameraVelocityX * elapsed_time_ms;
+        mCameraPosX = round(mTempX);
+    }
 
-    // TODO: Add map collision detection
+    if (mCameraPosY + kCameraHeight - 1 < map.getHeight() * 16) {
+        mTempY += mCameraVelocityY * elapsed_time_ms;
+        mCameraPosY = round(mTempY);
+    } else {
+        mCameraPosY -= 1;
+    }
+
+    printf("%i\n%i\n\n", map.getHeight() * 16, mCameraPosY + kCameraHeight);
 }

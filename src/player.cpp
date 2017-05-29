@@ -1,8 +1,8 @@
 /**
     player.cpp
-    Purpose: Controlling player sprites and logic
+    Purpose: Manage player logic and sprites
 
-    @author Zachary Vincze
+    @author: Zachary Vincze
     @version: 28/05/2017
 */
 
@@ -10,32 +10,14 @@
 #include "game.h"
 
 namespace {
-    // Walk Motion
-    const float kWalkSpeed = 0.03;
-
-    // Sprites
     const std::string kSpriteFilePath = "res/player.png";
 
-    // Sprite Frames
-    const int kWalkFrame = 0;
-    const int kStandFrame = 0;
+    const float kWalkSpeed = 0.03f;
+    const int kPlayerFrame = 0;
 
-    // Walk animation
     const int kNumWalkFrames = 4;
+    const int kNumSidewayWalkFrames = 2;
     const int kWalkFps = 5;
-
-    // Character
-    const int kCharacterFrame = 0;
-}
-
-bool operator<(const Player::SpriteState& a, const Player::SpriteState& b) {
-    if (a.motion_type != b.motion_type) {
-        return a.motion_type < b.motion_type;
-    }
-    if (a.direction_facing != b.direction_facing) {
-        return a.direction_facing < b.direction_facing;
-    }
-    return false;
 }
 
 Player::Player(Graphics& graphics, int x, int y) {
@@ -43,19 +25,65 @@ Player::Player(Graphics& graphics, int x, int y) {
     mY = y;
     mVelocityX = 0;
     mVelocityY = 0;
-    mDirectionFacing = LEFT;
-    initializeSprites(graphics);
+    mSprites.resize(8);
+
+    mDirectionFacing = RIGHT;
+    mMotionType = WALKING;
+
+    // Load sprites
+    // ----- STATIC SPRITES
+    mSprites[0] = new Sprite(graphics, kSpriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize);
+    mSprites[1] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize);
+    mSprites[2] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize);
+    mSprites[3] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize);
+
+    // ----- ANIMATED SPRITES
+    mSprites[4] = new AnimatedSprite(graphics, kSpriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize, kWalkFps, kNumWalkFrames);
+    mSprites[5] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, kWalkFps, kNumWalkFrames);
+    mSprites[6] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
+    mSprites[7] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
 }
 
 void Player::update(int elapsed_time_ms) {
-    mSprites[getSpriteState()]->update(elapsed_time_ms);
+    mSprites[getSpriteID()]->update(elapsed_time_ms);
 
-    mX += round(mVelocityX * elapsed_time_ms);
-    mY += round(mVelocityY * elapsed_time_ms);
+    mTempX += mVelocityX * elapsed_time_ms;
+    mX = round(mTempX);
+
+    mTempY += mVelocityY * elapsed_time_ms;
+    mY = round(mTempY);
 }
 
 void Player::draw(Graphics& graphics) {
-    mSprites[SpriteState(WALKING, LEFT)]->draw(graphics, mX, mY);
+    mSprites[getSpriteID()]->draw(graphics, mX, mY);
+}
+
+int Player::getSpriteID() {
+
+    if (mVelocityX != 0 || mVelocityY != 0) {
+        mMotionType = WALKING;
+    } else {
+        mMotionType = STANDING;
+    }
+
+    if (mDirectionFacing == UP && mMotionType == STANDING)
+        return 0;
+    else if (mDirectionFacing == DOWN && mMotionType == STANDING)
+        return 1;
+    else if (mDirectionFacing == LEFT && mMotionType == STANDING)
+        return 2;
+    else if (mDirectionFacing == RIGHT && mMotionType == STANDING)
+        return 3;
+    else if (mDirectionFacing == UP && mMotionType == WALKING)
+        return 4;
+    else if (mDirectionFacing == DOWN && mMotionType == WALKING)
+        return 5;
+    else if (mDirectionFacing == LEFT && mMotionType == WALKING)
+        return 6;
+    else if (mDirectionFacing == RIGHT && mMotionType == WALKING)
+        return 7;
+    else
+        return 0;
 }
 
 void Player::startMovingUp() {
@@ -79,46 +107,12 @@ void Player::startMovingRight() {
 }
 
 void Player::stopMoving() {
-    mVelocityY = 0.0f;
-    mVelocityX = 0.0f;
+    mVelocityX = 0;
+    mVelocityY = 0;
 }
 
-void Player::initializeSprites(Graphics& graphics) {
-    for (MotionType motion_type = FIRST_MOTION_TYPE; motion_type < LAST_MOTION_TYPE; motion_type = static_cast<MotionType>(motion_type+1)) {
-        for (DirectionFacing direction_facing = FIRST_DIRECTION_FACING; direction_facing < LAST_DIRECTION_FACING; direction_facing = static_cast<DirectionFacing>(direction_facing+1)) {
-            initializeSprite(graphics, SpriteState(motion_type, direction_facing));
-        }
+void Player::close() {
+    for (std::vector<Sprite*>::iterator i = mSprites.begin(); i != mSprites.end(); i++) {
+        delete (*i);
     }
-}
-
-void Player::initializeSprite(Graphics& graphics, const SpriteState& sprite_state) {
-    int source_y = sprite_state.direction_facing == UP ? kCharacterFrame*Game::kTileSize : (1 + kCharacterFrame)*Game::kTileSize;
-
-    int source_x;
-    switch (sprite_state.motion_type) {
-        case WALKING:
-            source_x = kWalkFrame * Game::kTileSize;
-            break;
-        case IDLE:
-            source_x = kStandFrame * Game::kTileSize;
-            break;
-        case LAST_MOTION_TYPE:
-            break;
-    }
-
-    if (sprite_state.motion_type == WALKING) {
-        // Create an animated sprite
-        mSprites[sprite_state] = new AnimatedSprite(graphics, kSpriteFilePath, source_x, source_y, Game::kTileSize, Game::kTileSize, kWalkFps, kNumWalkFrames);
-    } else {
-        mSprites[sprite_state] = new Sprite(graphics, kSpriteFilePath, source_x, source_y, Game::kTileSize, Game::kTileSize);
-    }
-}
-
-Player::SpriteState Player::getSpriteState() {
-    MotionType motion;
-    if (mVelocityX != 0 || mVelocityY != 0) {
-        motion = WALKING;
-    }
-
-    return SpriteState(motion, mDirectionFacing);
 }

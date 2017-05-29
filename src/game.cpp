@@ -39,7 +39,8 @@ void Game::eventLoop() {
     Graphics graphics;
     Input input;        // Object for handling inputs
     map = new Map();
-    animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, 5, 2);
+    // animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, 5, 2);
+    player = new Player(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
 
     tilemap.load(graphics, "res/tileset.png");
     map->load(Map::PALETTE_TOWN);
@@ -74,16 +75,26 @@ void Game::eventLoop() {
             running = false;
 
         // Temporary camera movement TODO: Needs to be fixed, this is terribly broken
-        if (input.wasKeyHeld(SDL_SCANCODE_DOWN))
+        if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
             camera.startMovingDown();
-        else if (input.wasKeyHeld(SDL_SCANCODE_UP))
+            player->startMovingDown();
+        }
+        else if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
             camera.startMovingUp();
-        else if (input.wasKeyHeld(SDL_SCANCODE_LEFT))
+            player->startMovingUp();
+        }
+        else if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
             camera.startMovingLeft();
-        else if (input.wasKeyHeld(SDL_SCANCODE_RIGHT))
+            player->startMovingLeft();
+        }
+        else if (input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
             camera.startMovingRight();
-        else
+            player->startMovingRight();
+        }
+        else {
             camera.stopMoving();
+            player->stopMoving();
+        }
 
         // Update
         const int current_time_ms = SDL_GetTicks(); // Get the current time
@@ -106,21 +117,25 @@ void Game::eventLoop() {
 }
 
 void Game::update(int elapsed_time_ms) {
-    camera.update(elapsed_time_ms);     // Update the camera's position
-    animated_sprite->update(elapsed_time_ms);
+    camera.update(elapsed_time_ms, *player, *map);     // Update the camera's position
+    // animated_sprite->update(elapsed_time_ms);
+    player->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
     map->draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
-    animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
+    // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
+    player->draw(graphics);
     graphics.present();                                                 // Present the renderer
 }
 
 void Game::close() {
     tilemap.close();
-    animated_sprite->close();
+    // animated_sprite->close();
+    player->close();
     delete animated_sprite;
+    delete player;
     delete map;
     IMG_Quit();
     SDL_Quit();

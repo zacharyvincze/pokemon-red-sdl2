@@ -1,17 +1,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "graphics.h"
 #include "sprite.h"
 #include "animated_sprite.h"
-#include <map>
+
+#include <vector>
 
 class Player {
     public:
         Player(Graphics& graphics, int x, int y);
 
-        void update(int elapsed_time_ms);
         void draw(Graphics& graphics);
+        void update(int elapsed_time_ms);
 
         void startMovingUp();
         void startMovingDown();
@@ -19,44 +19,33 @@ class Player {
         void startMovingRight();
         void stopMoving();
 
-    private:
         enum MotionType {
-            FIRST_MOTION_TYPE,
-            IDLE = FIRST_MOTION_TYPE,
             WALKING,
-            LAST_MOTION_TYPE
+            STANDING
         };
 
         enum DirectionFacing {
-            FIRST_DIRECTION_FACING,
-            UP = FIRST_DIRECTION_FACING,
+            UP,
             DOWN,
             LEFT,
-            RIGHT,
-            LAST_DIRECTION_FACING
+            RIGHT
         };
 
-        struct SpriteState {
-            SpriteState(MotionType motion_type = IDLE, DirectionFacing direction_facing = LEFT) :
-                motion_type(motion_type),
-                direction_facing(direction_facing) {}
+        void close();
 
-                MotionType motion_type;
-                DirectionFacing direction_facing;
-        };
+        int getX() { return mX; }
+        int getY() { return mY; }
 
-        friend bool operator<(const SpriteState& a, const SpriteState& b);
+    private:
+        int getSpriteID();
 
-        void initializeSprites(Graphics& graphics);
-        void initializeSprite(Graphics& graphics, const SpriteState& sprite);
-        SpriteState getSpriteState();
+        DirectionFacing mDirectionFacing;
+        MotionType mMotionType;
 
         int mX, mY;
-        float mVelocityX, mVelocityY;
-        DirectionFacing mDirectionFacing;
+        float mVelocityX, mVelocityY, mTempX, mTempY;
 
-        std::map<SpriteState, Sprite*> mSprites;
-
+        std::vector<Sprite*> mSprites;
 };
 
 #endif // PLAYER_H
