@@ -1,5 +1,5 @@
-# Remaking Pokemon Red/Blue
-Pokemon Red/Blue remade in SDL2.  Mainly for game development and engine development testing.
+# Recontructing Pokemon Red/Blue
+Pokemon Red/Blue recontructed in SDL2.  Mainly for game development and engine development testing.
 
 ![Screenshot](/screenshots/cover.png)
 
