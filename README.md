@@ -1,6 +1,8 @@
 # Remaking Pokemon Red/Blue
 Pokemon Red/Blue remade in SDL2.  Mainly for game development and engine development testing.
 
+![Screenshot](/screenshots/cover.png)
+
 ## Resources Used
 All spritesheets were obtained from [the Spriter's Resource](https://www.spriters-resource.com/game_boy_gbc/pokemonredblue/).
 
@@ -8,13 +10,13 @@ All spritesheets were obtained from [the Spriter's Resource](https://www.spriter
 submitted by [Polar Koala](https://www.spriters-resource.com/submitter/Polar+Koala/)
  * [Tileset](https://www.spriters-resource.com/game_boy_gbc/pokemonredblue/sheet/63033/)
  submitted by [Superjustinbros](https://www.spriters-resource.com/submitter/Superjustinbros/)
- 
+
  ## Materials Used
  Things that helped me along during development.
   * [Reconstructing Cave Story](https://www.youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X)
   by [Christopher Hebert](https://www.youtube.com/user/Iffipocolypse/featured)
   * [Lazy Foo Beginning Game Programming v2.0](http://lazyfoo.net/tutorials/SDL/)
-  
+
   ## Controls
    * Z as B button
    * X as A button

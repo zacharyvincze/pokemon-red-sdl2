@@ -12,7 +12,7 @@
 namespace {
     const std::string kSpriteFilePath = "res/player.png";
 
-    const float kWalkSpeed = 0.03f;
+    const float kWalkSpeed = 0.06f;
     const int kPlayerFrame = 0;
 
     const int kNumWalkFrames = 4;

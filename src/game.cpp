@@ -41,6 +41,7 @@ void Game::eventLoop() {
     map = new Map();
     // animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, 5, 2);
     player = new Player(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
+    camera = new Camera();
 
     tilemap.load(graphics, "res/tileset.png");
     map->load(Map::PALETTE_TOWN);
@@ -76,23 +77,18 @@ void Game::eventLoop() {
 
         // Temporary camera movement TODO: Needs to be fixed, this is terribly broken
         if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            camera.startMovingDown();
             player->startMovingDown();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
-            camera.startMovingUp();
             player->startMovingUp();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
-            camera.startMovingLeft();
             player->startMovingLeft();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-            camera.startMovingRight();
             player->startMovingRight();
         }
         else {
-            camera.stopMoving();
             player->stopMoving();
         }
 
@@ -117,17 +113,18 @@ void Game::eventLoop() {
 }
 
 void Game::update(int elapsed_time_ms) {
-    camera.update(elapsed_time_ms, *player, *map);     // Update the camera's position
+    camera->update(elapsed_time_ms, *player, *map);     // Update the camera's position
     // animated_sprite->update(elapsed_time_ms);
     player->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    map->draw(graphics, tilemap, camera.getX(), camera.getY());          // Draw the map
+    map->draw(graphics, tilemap, camera->getCamera().x, camera->getCamera().y);          // Draw the map
     // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     player->draw(graphics);
     graphics.present();                                                 // Present the renderer
+    printf("%i\n%i\n\n", player->getX(), player->getY());
 }
 
 void Game::close() {
@@ -137,6 +134,7 @@ void Game::close() {
     delete animated_sprite;
     delete player;
     delete map;
+    delete camera;
     IMG_Quit();
     SDL_Quit();
 }

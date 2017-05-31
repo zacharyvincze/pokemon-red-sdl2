@@ -10,28 +10,12 @@ class Camera {
     public:
         Camera();
 
-        void startMovingRight();
-        void startMovingLeft();
-        void startMovingUp();
-        void startMovingDown();
-
-        void stopMoving();
-
-        int getX() { return mCameraPosX; }
-        int getY() { return mCameraPosY; }
-
-        void setY(int y) { mCameraPosY = y; }
-        void setX(int x) { mCameraPosX = x; }
+        SDL_Rect getCamera() { return camera; }
 
         void update(int elapsed_time_ms, Player& player, Map& map);
 
     private:
-        int mCameraPosX;
-        int mCameraPosY;
-        float mCameraVelocityX;
-        float mCameraVelocityY;
-        float mTempX;
-        float mTempY;
+        SDL_Rect camera;
 };
 
 #endif // CAMERA_H

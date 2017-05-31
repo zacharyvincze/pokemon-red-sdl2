@@ -25,7 +25,7 @@ class Game {
         void draw(Graphics& graphics);
         void close();
 
-        Camera camera;
+        Camera* camera;
         Tilemap tilemap;
         Map* map;
         AnimatedSprite* animated_sprite;
