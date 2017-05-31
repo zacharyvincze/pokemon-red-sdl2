@@ -1,5 +1,7 @@
 # Reconstructing Pokemon Red/Blue
-Pokemon Red/Blue reconstructed in SDL2.  Mainly for game development and engine development testing.  (This project is very early into development right now, the engine is being created completely from scratch)
+Pokemon Red/Blue reconstructed in SDL2.  Mainly for game development and engine development testing.
+
+*(This project is very early into development right now, the engine is being created completely from scratch)*
 
 ![Screenshot](/screenshots/cover.png)
 
