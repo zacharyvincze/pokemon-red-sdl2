@@ -11,7 +11,7 @@ class Player {
         Player(Graphics& graphics, int x, int y);
 
         void draw(Graphics& graphics);
-        void update(int elapsed_time_ms);
+        void update(int elapsed_time_ms, SDL_Rect& camera);
 
         void startMovingUp();
         void startMovingDown();

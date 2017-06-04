@@ -115,12 +115,12 @@ void Game::eventLoop() {
 void Game::update(int elapsed_time_ms) {
     camera->update(elapsed_time_ms, *player, *map);     // Update the camera's position
     // animated_sprite->update(elapsed_time_ms);
-    player->update(elapsed_time_ms);
+    player->update(elapsed_time_ms, camera->getCamera());
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    map->draw(graphics, tilemap, camera->getCamera().x, camera->getCamera().y);          // Draw the map
+    map->draw(graphics, tilemap, camera->getCamera());          // Draw the map
     // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     player->draw(graphics);
     graphics.present();                                                 // Present the renderer

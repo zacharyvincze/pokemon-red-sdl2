@@ -10,7 +10,7 @@ class Camera {
     public:
         Camera();
 
-        SDL_Rect getCamera() { return camera; }
+        SDL_Rect& getCamera() { return camera; }
 
         void update(int elapsed_time_ms, Player& player, Map& map);
 

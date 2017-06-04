@@ -43,10 +43,10 @@ void Map::clear() {
 }
 
 // Draw the map using the tilset
-void Map::draw(Graphics& graphics, Tilemap& tilemap, int cameraX, int cameraY) {
+void Map::draw(Graphics& graphics, Tilemap& tilemap, SDL_Rect& camera) {
     for (int i = 0; i < mWidth; i++) {
         for (int j = 0; j < mHeight; j++) {
-            tilemap.draw(graphics, -cameraX + (i * 16), -cameraY + (j * 16), map[j][i]);
+            tilemap.draw(graphics, -camera.x + (i * 16), -camera.y + (j * 16), map[j][i]);
         }
     }
 }

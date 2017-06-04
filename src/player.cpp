@@ -21,8 +21,10 @@ namespace {
 }
 
 Player::Player(Graphics& graphics, int x, int y) {
-    mX = x;
-    mY = y;
+    mX = 0;
+    mY = 0;
+    mTempX = x;
+    mTempY = y;
     mVelocityX = 0;
     mVelocityY = 0;
     mSprites.resize(8);
@@ -44,7 +46,7 @@ Player::Player(Graphics& graphics, int x, int y) {
     mSprites[7] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
 }
 
-void Player::update(int elapsed_time_ms) {
+void Player::update(int elapsed_time_ms, SDL_Rect& camera) {
     mSprites[getSpriteID()]->update(elapsed_time_ms);
 
     mTempX += mVelocityX * elapsed_time_ms;

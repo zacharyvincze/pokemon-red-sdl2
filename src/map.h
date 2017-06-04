@@ -20,7 +20,7 @@ class Map {
         int getTile(int x, int y) { return map[y][x]; }
         int getSize() { return mTotalSize; }
 
-        void draw(Graphics& graphics, Tilemap& tilemap, int cameraX, int cameraY);
+        void draw(Graphics& graphics, Tilemap& tilemap, SDL_Rect& camera);
 
         void load(int map_id);
 
