@@ -46,7 +46,7 @@ Player::Player(Graphics& graphics, int x, int y) {
     mSprites[7] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
 }
 
-void Player::update(int elapsed_time_ms, SDL_Rect& camera) {
+void Player::update(int elapsed_time_ms) {
     mSprites[getSpriteID()]->update(elapsed_time_ms);
 
     mTempX += mVelocityX * elapsed_time_ms;
@@ -56,8 +56,8 @@ void Player::update(int elapsed_time_ms, SDL_Rect& camera) {
     mY = round(mTempY);
 }
 
-void Player::draw(Graphics& graphics) {
-    mSprites[getSpriteID()]->draw(graphics, mX, mY);
+void Player::draw(Graphics& graphics, SDL_Rect& camera) {
+    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, mY - camera.y);
 }
 
 int Player::getSpriteID() {

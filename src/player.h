@@ -10,8 +10,8 @@ class Player {
     public:
         Player(Graphics& graphics, int x, int y);
 
-        void draw(Graphics& graphics);
-        void update(int elapsed_time_ms, SDL_Rect& camera);
+        void draw(Graphics& graphics, SDL_Rect& camera);
+        void update(int elapsed_time_ms);
 
         void startMovingUp();
         void startMovingDown();

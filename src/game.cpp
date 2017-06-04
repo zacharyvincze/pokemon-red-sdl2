@@ -75,12 +75,18 @@ void Game::eventLoop() {
         if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE) || input.wasKeyPressed(SDL_SCANCODE_Q))
             running = false;
 
-        // Temporary camera movement TODO: Needs to be fixed, this is terribly broken
-        if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            player->startMovingDown();
+        // Player movement
+        if (input.wasKeyHeld(SDL_SCANCODE_LEFT) && input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
+            player->stopMoving();
+        }
+        else if (input.wasKeyHeld(SDL_SCANCODE_UP) && input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
+            player->stopMoving();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
             player->startMovingUp();
+        }
+        else if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
+            player->startMovingDown();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
             player->startMovingLeft();
@@ -115,16 +121,16 @@ void Game::eventLoop() {
 void Game::update(int elapsed_time_ms) {
     camera->update(elapsed_time_ms, *player, *map);     // Update the camera's position
     // animated_sprite->update(elapsed_time_ms);
-    player->update(elapsed_time_ms, camera->getCamera());
+    player->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
     map->draw(graphics, tilemap, camera->getCamera());          // Draw the map
     // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
-    player->draw(graphics);
+    player->draw(graphics, camera->getCamera());
     graphics.present();                                                 // Present the renderer
-    printf("%i\n%i\n\n", player->getX(), player->getY());
+    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n\n", player->getX(), player->getY(), camera->getCamera().x, camera->getCamera().y);
 }
 
 void Game::close() {
