@@ -18,6 +18,7 @@ submitted by [Polar Koala](https://www.spriters-resource.com/submitter/Polar+Koa
   * [Reconstructing Cave Story](https://www.youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X)
   by [Christopher Hebert](https://www.youtube.com/user/Iffipocolypse/featured)
   * [Lazy Foo Beginning Game Programming v2.0](http://lazyfoo.net/tutorials/SDL/)
+  * [pokered-gbc (Disassembly of Pokemon Red)](https://github.com/dannye/pokered-gbc)
 
   ## Controls
    * Z as B button
