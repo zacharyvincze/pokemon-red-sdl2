@@ -43,8 +43,8 @@ void Game::eventLoop() {
     player = new Player(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     camera = new Camera();
 
-    tilemap.load(graphics, "res/tileset.png");
-    map->load(Map::PALETTE_TOWN);
+    tilemap.load(graphics, "gfx/tilesets/overworld.png");
+    map->load(Map::PALLET_TOWN);
 
     SDL_Event event;    // SDL event handler
 
@@ -77,10 +77,10 @@ void Game::eventLoop() {
 
         // Player movement
         if (input.wasKeyHeld(SDL_SCANCODE_LEFT) && input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-            player->stopMoving();
+            // player->stopMoving();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_UP) && input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            player->stopMoving();
+            // player->stopMoving();
         }
         else if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
             player->startMovingUp();
@@ -95,7 +95,7 @@ void Game::eventLoop() {
             player->startMovingRight();
         }
         else {
-            player->stopMoving();
+            // player->stopMoving();
         }
 
         // Update
@@ -130,7 +130,8 @@ void Game::draw(Graphics& graphics) {
     // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     player->draw(graphics, camera->getCamera());
     graphics.present();                                                 // Present the renderer
-    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n\n", player->getX(), player->getY(), camera->getCamera().x, camera->getCamera().y);
+    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", player->getX(), player->getY(), camera->getCamera().x, camera->getCamera().y);
+    printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", player->getX() - camera->getCamera().x, player->getY() - camera->getCamera().y);
 }
 
 void Game::close() {

@@ -25,7 +25,7 @@ class Map {
         void load(int map_id);
 
         enum Maps {
-            PALETTE_TOWN,
+            PALLET_TOWN,
             ROUTE_1
         };
 
@@ -38,7 +38,7 @@ class Map {
 
          void resize();
          void clear();
-         void insert(int temp[]);
+         void insert(const int maptiles[]);
 };
 
 #endif // MAP_H

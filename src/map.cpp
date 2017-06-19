@@ -8,6 +8,11 @@
 
 #include "map.h"
 
+#include "data/maps/pallettown.cpp"
+#include "data/maps/route_1.cpp"
+
+#include "data/tiles.cpp"
+
 // Initialize the map class
 Map::Map() {
     mWidth = 0;
@@ -51,13 +56,13 @@ void Map::draw(Graphics& graphics, Tilemap& tilemap, SDL_Rect& camera) {
     }
 }
 
-void Map::insert(int temp[]) {
+void Map::insert(const int maptiles[]) {
     resize();
     clear();
     int k = 0;
     for (int i = 0; i < mHeight; i++) {
         for (int j = 0; j < mWidth; j++) {
-            map[i][j] = temp[k];
+            map[i][j] = maptiles[k];
             k++;
         }
     }
@@ -65,32 +70,19 @@ void Map::insert(int temp[]) {
 
 void Map::load(int map_id) {
     switch(map_id) {
-        case PALETTE_TOWN: {
-            mWidth = 20;
-            mHeight = 18;
-            mTotalSize = mWidth * mHeight;
-
-            int temp[360] = {
-                  8,  8,  8,  6,  8,  8,  8,  8,  8,  6,  9,  9,  6,  8,  8,  8,  8,  8,  6,  8,
-                  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  9,  9,  6,  6,  6,  6,  6,  6,  6,  6,
-                  6,  8,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  8,  6,
-                  6,  8,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  8,  6,
-                  6,  8,  2,  2,  1,  0,  1,  0,  1,  0,  2,  2,  1,  0,  1,  0,  1,  0,  8,  6,
-                  6,  8,  2,  4,  0,  1,  0,  1,  0,  1,  2,  4,  0,  1,  0,  1,  0,  1,  8,  6,
-                  6,  8,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  8,  6,
-                  6,  8,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  0,  1,  8,  6,
-                  6,  8,  1,  0,  2,  2,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  8,  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  6,
-                  6,  6,  8,  8,  0,  0,  0,  0,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6
-            };
-            insert(temp);
+        case PALLET_TOWN: {
+            mWidth = pallettown::MAP_WIDTH;
+            mHeight = pallettown::MAP_HEIGHT;
+            mTotalSize = pallettown::MAP_HEIGHT * pallettown::MAP_WIDTH;
+            insert(pallettown::MAP_TILES);
         }
+        break;
+        case ROUTE_1: {
+            mWidth = route_1::MAP_WIDTH;
+            mHeight = route_1::MAP_HEIGHT;
+            mTotalSize = route_1::MAP_HEIGHT * route_1::MAP_WIDTH;
+            insert(route_1::MAP_TILES);
+        }
+        break;
     }
 }

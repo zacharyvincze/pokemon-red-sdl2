@@ -10,7 +10,7 @@
 #include "game.h"
 
 namespace {
-    const std::string kSpriteFilePath = "res/player.png";
+    const std::string kSpriteFilePath = "gfx/sprites/red.png";
 
     const float kWalkSpeed = 0.06f;
     const int kPlayerFrame = 0;
@@ -18,6 +18,9 @@ namespace {
     const int kNumWalkFrames = 4;
     const int kNumSidewayWalkFrames = 2;
     const int kWalkFps = 5;
+
+    bool kIsWalking = false;
+    bool kIsAtTarget = true;
 }
 
 Player::Player(Graphics& graphics, int x, int y) {
@@ -49,11 +52,20 @@ Player::Player(Graphics& graphics, int x, int y) {
 void Player::update(int elapsed_time_ms) {
     mSprites[getSpriteID()]->update(elapsed_time_ms);
 
-    mTempX += mVelocityX * elapsed_time_ms;
-    mX = round(mTempX);
+    //mTempX += mVelocityX * elapsed_time_ms;
+    //mX = round(mTempX);
 
-    mTempY += mVelocityY * elapsed_time_ms;
-    mY = round(mTempY);
+    //mTempY += mVelocityY * elapsed_time_ms;
+    //mY = round(mTempY);
+
+    // Start tile-based movement updates
+    if (kIsWalking == true && kIsAtTarget == false) {
+        mX += round(mVelocityX * elapsed_time_ms);
+        mY += round(mVelocityY * elapsed_time_ms);
+    }
+
+    // Check if centered to tile, if so, stop moving the player
+    if (mY % Game::kTileSize == 0) stopMoving();
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -89,26 +101,44 @@ int Player::getSpriteID() {
 }
 
 void Player::startMovingUp() {
-    mVelocityY = -kWalkSpeed;
-    mDirectionFacing = UP;
+    if (kIsWalking == false) {
+        kIsWalking = true;
+        kIsAtTarget = false;
+        mVelocityY = -kWalkSpeed;
+        mDirectionFacing = UP;
+    }
 }
 
 void Player::startMovingDown() {
-    mVelocityY = kWalkSpeed;
-    mDirectionFacing = DOWN;
+    if (kIsWalking == false) {
+        kIsWalking = true;
+        kIsAtTarget = false;
+        mVelocityY = kWalkSpeed;
+        mDirectionFacing = DOWN;
+    }
 }
 
 void Player::startMovingLeft() {
-    mVelocityX = -kWalkSpeed;
-    mDirectionFacing = LEFT;
+    if (kIsWalking == false) {
+        kIsWalking = true;
+        kIsAtTarget = false;
+        mVelocityX = -kWalkSpeed;
+        mDirectionFacing = LEFT;
+    }
 }
 
 void Player::startMovingRight() {
-    mVelocityX = kWalkSpeed;
-    mDirectionFacing = RIGHT;
+    if (kIsWalking == false) {
+        kIsWalking = true;
+        kIsAtTarget = false;
+        mVelocityX = kWalkSpeed;
+        mDirectionFacing = RIGHT;
+    }
 }
 
 void Player::stopMoving() {
+    kIsWalking = false;
+    kIsAtTarget = true;
     mVelocityX = 0;
     mVelocityY = 0;
 }
