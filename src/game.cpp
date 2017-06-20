@@ -119,9 +119,9 @@ void Game::eventLoop() {
 }
 
 void Game::update(int elapsed_time_ms) {
+    player->update(elapsed_time_ms);
     camera->update(elapsed_time_ms, *player, *map);     // Update the camera's position
     // animated_sprite->update(elapsed_time_ms);
-    player->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {

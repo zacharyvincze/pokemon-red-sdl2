@@ -1,4 +1,5 @@
-namespace pallettown {
+namespace pallet_town {
+    const int MAP_ID = 0;
     const int MAP_WIDTH = 20;
     const int MAP_HEIGHT = 18;
     const int MAP_TILES[MAP_WIDTH * MAP_HEIGHT] = {

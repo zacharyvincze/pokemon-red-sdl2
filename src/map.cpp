@@ -8,8 +8,10 @@
 
 #include "map.h"
 
-#include "data/maps/pallettown.cpp"
-#include "data/maps/route_1.cpp"
+#include "data/maps/pallet_town.cpp"
+#include "data/maps/viridian_city.cpp"
+
+#include "constants.cpp"
 
 #include "data/tiles.cpp"
 
@@ -70,18 +72,18 @@ void Map::insert(const int maptiles[]) {
 
 void Map::load(int map_id) {
     switch(map_id) {
-        case PALLET_TOWN: {
-            mWidth = pallettown::MAP_WIDTH;
-            mHeight = pallettown::MAP_HEIGHT;
-            mTotalSize = pallettown::MAP_HEIGHT * pallettown::MAP_WIDTH;
-            insert(pallettown::MAP_TILES);
+        case MapConst::PALLET_TOWN: {
+            mWidth = pallet_town::MAP_WIDTH;
+            mHeight = pallet_town::MAP_HEIGHT;
+            mTotalSize = pallet_town::MAP_HEIGHT * pallet_town::MAP_WIDTH;
+            insert(pallet_town::MAP_TILES);
         }
         break;
-        case ROUTE_1: {
-            mWidth = route_1::MAP_WIDTH;
-            mHeight = route_1::MAP_HEIGHT;
-            mTotalSize = route_1::MAP_HEIGHT * route_1::MAP_WIDTH;
-            insert(route_1::MAP_TILES);
+        case MapConst::VIRIDIAN_CITY: {
+            mWidth = viridian_city::MAP_WIDTH;
+            mHeight = viridian_city::MAP_HEIGHT;
+            mTotalSize = viridian_city::MAP_HEIGHT * viridian_city::MAP_WIDTH;
+            insert(viridian_city::MAP_TILES);
         }
         break;
     }

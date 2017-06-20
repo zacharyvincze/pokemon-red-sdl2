@@ -65,11 +65,11 @@ void Player::update(int elapsed_time_ms) {
     }
 
     // Check if centered to tile, if so, stop moving the player
-    if (mY % Game::kTileSize == 0) stopMoving();
+    if (mY % Game::kTileSize == 0 && kIsWalking == true) stopMoving();
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
-    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, mY - camera.y);
+    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, (mY - 4) - camera.y);
 }
 
 int Player::getSpriteID() {

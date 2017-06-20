@@ -6,6 +6,7 @@ LDFLAGS += `pkg-config --libs sdl2 SDL2_image`
 PROG := bin/pokemon
 OBJS := $(patsubst src/%.cpp,obj/%.o, $(wildcard src/*.cpp))
 OBJS += $(patsubst src/data/maps/%.cpp,obj/data/maps/%.o, $(wildcard src/data/maps/*.cpp))
+OBJS += $(patsubst src/constants/%.cpp,obj/constants/%.o, $(wildcard src/constants/*.cpp))
 OBJS += $(patsubst src/data/%.cpp,obj/data/%.o, $(wildcard src/data/*.cpp))
 DEPS := $(OBJS:.o=.d)
 

@@ -27,8 +27,8 @@ Camera::Camera() {
 
 void Camera::update(int elapsed_time_ms, Player& player, Map& map) {
 
-    camera.x = (player.getX() + 16 / 2) - 160 / 2;
-    camera.y = (player.getY() + 16 / 2) - 144 / 2;
+    camera.x = round(player.getX() - 80);
+    camera.y = round(player.getY() - 60);
 
     if (camera.x < 0) {
         camera.x = 0;
