@@ -24,11 +24,6 @@ class Map {
 
         void load(int map_id);
 
-        enum Maps {
-            PALLET_TOWN,
-            ROUTE_1
-        };
-
     private:
          std::vector<std::vector<int> > map;
          int mWidth;

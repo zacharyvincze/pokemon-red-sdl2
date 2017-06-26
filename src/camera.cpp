@@ -25,7 +25,7 @@ Camera::Camera() {
     camera.h = kCameraHeight;
 }
 
-void Camera::update(int elapsed_time_ms, Player& player, Map& map) {
+void Camera::update(Player& player, Map& map) {
 
     camera.x = round(player.getX() - 80);
     camera.y = round(player.getY() - 60);

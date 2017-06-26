@@ -11,7 +11,7 @@ class Player {
         Player(Graphics& graphics, int x, int y);
 
         void draw(Graphics& graphics, SDL_Rect& camera);
-        void update(int elapsed_time_ms);
+        void update();
 
         void startMovingUp();
         void startMovingDown();
@@ -42,7 +42,7 @@ class Player {
         DirectionFacing mDirectionFacing;
         MotionType mMotionType;
 
-        int mX, mY;
+        int mX, mY, mTargetX, mTargetY;
         float mVelocityX, mVelocityY, mTempX, mTempY;
 
         std::vector<Sprite*> mSprites;

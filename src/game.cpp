@@ -12,15 +12,20 @@
 #include "input.h"
 #include "camera.h"
 #include "graphics.h"
+#include "constants.cpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
 
-// TODO: Fix include statements, only include what is necessary
-
 // Game constants
 namespace {
-    const int kFps = 60;
+    const int fps = 60;
+    const int frameDuration = 16;
+    const int maxTimePerFrame = 200;
+    int accumulatedTime = 0;
+
+    int lastUpdateTime = 0;
+    int currentTime = 0;
 }
 
 int Game::kTileSize = 16;
@@ -39,21 +44,22 @@ void Game::eventLoop() {
     Graphics graphics;
     Input input;        // Object for handling inputs
     map = new Map();
-    // animated_sprite = new AnimatedSprite(graphics, "res/player.png", 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, 5, 2);
-    player = new Player(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
+    player = new Player(graphics, 1, 2);
     camera = new Camera();
 
     tilemap.load(graphics, "gfx/tilesets/overworld.png");
-    map->load(Map::PALLET_TOWN);
+    map->load(MapConst::PALLET_TOWN);
 
     SDL_Event event;    // SDL event handler
 
     bool running = true;                    // Loop flag
-    int last_update_time = SDL_GetTicks();  // Initialize update timer
-    int frame_time;
+    lastUpdateTime = SDL_GetTicks();
 
     while(running) {
-        frame_time = SDL_GetTicks();   // Get start time
+        currentTime = SDL_GetTicks();
+        accumulatedTime += (currentTime - lastUpdateTime);
+
+        if (accumulatedTime > maxTimePerFrame) accumulatedTime = maxTimePerFrame;
 
         // Get keydown and keyup events for the input object
         while(SDL_PollEvent(&event) != 0) {
@@ -99,16 +105,18 @@ void Game::eventLoop() {
         }
 
         // Update
-        const int current_time_ms = SDL_GetTicks(); // Get the current time
-        update(current_time_ms - last_update_time); // Pass the elapsed time to the update function
-        last_update_time = current_time_ms;         // Update the update timer
+        while (accumulatedTime >= frameDuration) {
+            accumulatedTime -= frameDuration;
+            update();
+        }
+        lastUpdateTime = SDL_GetTicks();
 
         // Render
         draw(graphics);
 
         // Cap the frame rate
-        if (SDL_GetTicks() - frame_time < MIN_FRAME_TIME) {
-            SDL_Delay(MIN_FRAME_TIME - (SDL_GetTicks() - frame_time));               // Delay the program to cap the frame rate
+        if (SDL_GetTicks() - currentTime < frameDuration) {
+            SDL_Delay(frameDuration - (SDL_GetTicks() - currentTime));
         }
 
         // Measure frames per second
@@ -118,16 +126,15 @@ void Game::eventLoop() {
     }
 }
 
-void Game::update(int elapsed_time_ms) {
-    player->update(elapsed_time_ms);
-    camera->update(elapsed_time_ms, *player, *map);     // Update the camera's position
+void Game::update() {
+    player->update();
+    camera->update(*player, *map);     // Update the camera's position
     // animated_sprite->update(elapsed_time_ms);
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
     map->draw(graphics, tilemap, camera->getCamera());          // Draw the map
-    // animated_sprite->draw(graphics, Game::kTileSize * 1, Game::kTileSize * 2);
     player->draw(graphics, camera->getCamera());
     graphics.present();                                                 // Present the renderer
     printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", player->getX(), player->getY(), camera->getCamera().x, camera->getCamera().y);

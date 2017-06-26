@@ -10,27 +10,26 @@
 #include "game.h"
 
 namespace {
-    const std::string kSpriteFilePath = "gfx/sprites/red.png";
+    const std::string spriteFilePath = "gfx/sprites/red.png";
 
-    const float kWalkSpeed = 0.06f;
-    const int kPlayerFrame = 0;
+    const float walkSpeed = 1;             // Pixles moved per frame
+    const int playerFrame = 0;
 
-    const int kNumWalkFrames = 4;
-    const int kNumSidewayWalkFrames = 2;
-    const int kWalkFps = 5;
+    const int numWalkFrames = 4;
+    const int numSidewayWalkFrames = 2;
+    const int walkFps = 10;                // Change frames after certain amount of frames have passed
 
-    bool kIsWalking = false;
-    bool kIsAtTarget = true;
-
-    int kTargetX = 0;
-    int kTargetY = 0;
+    bool isWalking = false;
+    bool atTarget = true;
 }
 
 Player::Player(Graphics& graphics, int x, int y) {
-    mX = 0;
-    mY = 0;
-    mTempX = x;
-    mTempY = y;
+    mX = x * 16;
+    mY = y * 16;
+    mTempX = x * 16;
+    mTempY = y * 16;
+    mTargetX = x * 16;
+    mTargetY = y * 16;
     mVelocityX = 0;
     mVelocityY = 0;
     mSprites.resize(8);
@@ -40,21 +39,22 @@ Player::Player(Graphics& graphics, int x, int y) {
 
     // Load sprites
     // ----- STATIC SPRITES
-    mSprites[0] = new Sprite(graphics, kSpriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize);
-    mSprites[1] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize);
-    mSprites[2] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize);
-    mSprites[3] = new Sprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize);
+    mSprites[0] = new Sprite(graphics, spriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize);
+    mSprites[1] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize);
+    mSprites[2] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize);
+    mSprites[3] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize);
 
     // ----- ANIMATED SPRITES
-    mSprites[4] = new AnimatedSprite(graphics, kSpriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize, kWalkFps, kNumWalkFrames);
-    mSprites[5] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, kWalkFps, kNumWalkFrames);
-    mSprites[6] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
-    mSprites[7] = new AnimatedSprite(graphics, kSpriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, kWalkFps, kNumSidewayWalkFrames);
+    mSprites[4] = new AnimatedSprite(graphics, spriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames);
+    mSprites[5] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames);
+    mSprites[6] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames);
+    mSprites[7] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames);
 }
 
-void Player::update(int elapsed_time_ms) {
-    mSprites[getSpriteID()]->update(elapsed_time_ms);
+void Player::update() {
+    mSprites[getSpriteID()]->update();
 
+    // Possible rouding?  It's pretty broken right now, but could be useful.
     //mTempX += mVelocityX * elapsed_time_ms;
     //mX = round(mTempX);
 
@@ -62,19 +62,19 @@ void Player::update(int elapsed_time_ms) {
     //mY = round(mTempY);
 
     // Start tile-based movement updates
-    if (kIsWalking == true && kIsAtTarget == false) {
-        mX += round(mVelocityX * elapsed_time_ms);
-        mY += round(mVelocityY * elapsed_time_ms);
+    if (isWalking == true && atTarget == false) {
+        mX += mVelocityX;
+        mY += mVelocityY;
     }
 
-    // Check if player has reached target, if so, make kIsAtTarget true
-    if (mX == kTargetX && mY == kTargetY) kIsAtTarget = true;
+    // Check if player has reached target, if so, make atTarget true
+    if (mX == mTargetX && mY == mTargetY) atTarget = true;
 
     // Player has reached target, they must now stop
-    if (kIsAtTarget == true && kIsWalking == true) stopMoving();
+    if (atTarget == true && isWalking == true) stopMoving();
 
-    printf("TARGET Y: %i\n", kTargetY);
-    printf("TARGET X: %i\n", kTargetX);
+    printf("TARGET X: %i\n", mTargetX);
+    printf("TARGET Y: %i\n", mTargetY);
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -111,47 +111,47 @@ int Player::getSpriteID() {
 }
 
 void Player::startMovingUp() {
-    if (kIsWalking == false) {
-        kIsWalking = true;
-        kIsAtTarget = false;
-        kTargetY = mY - 16;
-        mVelocityY = -kWalkSpeed;
+    if (isWalking == false) {
+        isWalking = true;
+        atTarget = false;
+        mTargetY = mY - 16;
+        mVelocityY = -walkSpeed;
         mDirectionFacing = UP;
     }
 }
 
 void Player::startMovingDown() {
-    if (kIsWalking == false) {
-        kIsWalking = true;
-        kIsAtTarget = false;
-        kTargetY = mY + 16;
-        mVelocityY = kWalkSpeed;
+    if (isWalking == false) {
+        isWalking = true;
+        atTarget = false;
+        mTargetY = mY + 16;
+        mVelocityY = walkSpeed;
         mDirectionFacing = DOWN;
     }
 }
 
 void Player::startMovingLeft() {
-    if (kIsWalking == false) {
-        kIsWalking = true;
-        kIsAtTarget = false;
-        kTargetX = mX - 16;
-        mVelocityX = -kWalkSpeed;
+    if (isWalking == false) {
+        isWalking = true;
+        atTarget = false;
+        mTargetX = mX - 16;
+        mVelocityX = -walkSpeed;
         mDirectionFacing = LEFT;
     }
 }
 
 void Player::startMovingRight() {
-    if (kIsWalking == false) {
-        kIsWalking = true;
-        kIsAtTarget = false;
-        kTargetX = mX + 16;
-        mVelocityX = kWalkSpeed;
+    if (isWalking == false) {
+        isWalking = true;
+        atTarget = false;
+        mTargetX = mX + 16;
+        mVelocityX = walkSpeed;
         mDirectionFacing = RIGHT;
     }
 }
 
 void Player::stopMoving() {
-    kIsWalking = false;
+    isWalking = false;
     mVelocityX = 0;
     mVelocityY = 0;
 }
