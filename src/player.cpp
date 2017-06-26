@@ -15,6 +15,8 @@ namespace {
     const float walkSpeed = 1;             // Pixles moved per frame
     const int playerFrame = 0;
 
+    const int verticalDrawOffset = 4;
+
     const int numWalkFrames = 4;
     const int numSidewayWalkFrames = 2;
     const int walkFps = 10;                // Change frames after certain amount of frames have passed
@@ -79,7 +81,7 @@ void Player::update() {
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
     // Drawing with the 4 pixel y offset from the original game
-    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, (mY - 4) - camera.y);
+    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, (mY - verticalDrawOffset) - camera.y);
 }
 
 int Player::getSpriteID() {

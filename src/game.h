@@ -10,6 +10,7 @@
 #include "animated_sprite.h"
 #include "player.h"
 #include "input.h"
+#include "text.h"
 
 #include <chrono>
 
@@ -25,12 +26,13 @@ class Game {
         void update();
         void draw(Graphics& graphics);
         void close();
-        
+
         Camera* camera;
         Tilemap tilemap;
         Map* map;
         AnimatedSprite* animated_sprite;
         Player* player;
+        Text* text;
 };
 
 #endif // GAME_H

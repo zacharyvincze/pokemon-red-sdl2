@@ -1,8 +1,8 @@
 CXX ?= g++-5.2
 MKDIR := mkdir -p
-CXXFLAGS += `pkg-config --cflags sdl2 SDL2_image`
+CXXFLAGS += `pkg-config --cflags sdl2 SDL2_image SDL2_ttf`
 CXXFLAGS += -pedantic -std=c++11
-LDFLAGS += `pkg-config --libs sdl2 SDL2_image`
+LDFLAGS += `pkg-config --libs sdl2 SDL2_image SDL2_ttf`
 PROG := bin/pokemon
 OBJS := $(patsubst src/%.cpp,obj/%.o, $(wildcard src/*.cpp))
 OBJS += $(patsubst src/data/maps/%.cpp,obj/data/maps/%.o, $(wildcard src/data/maps/*.cpp))

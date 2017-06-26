@@ -11,8 +11,8 @@
 
 // Graphic constants
 namespace {
-    const int kScreenWidth = 640;   // Window width
-    const int kScreenHeight = 576;  // Window height
+    const int kScreenWidth = 160;   // Window width
+    const int kScreenHeight = 144;  // Window height
 
     const int kRendererWidth = 160;     // Renderer width
     const int kRendererHeight = 144;    // Renderer height
