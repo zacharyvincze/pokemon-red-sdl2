@@ -26,8 +26,10 @@ namespace {
 }
 
 Player::Player(Graphics& graphics, int x, int y) {
-    mX = x * 16;
-    mY = y * 16;
+    mPlayerRect.x = x * 16;
+    mPlayerRect.y = y * 16;
+    mPlayerRect.w = 16;
+    mPlayerRect.h = 16;
     mTempX = x * 16;
     mTempY = y * 16;
     mTargetX = x * 16;
@@ -53,24 +55,23 @@ Player::Player(Graphics& graphics, int x, int y) {
     mSprites[7] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames);
 }
 
+Player::~Player() {
+    for (std::vector<Sprite*>::iterator i = mSprites.begin(); i != mSprites.end(); i++) {
+        delete (*i);
+    }
+}
+
 void Player::update() {
     mSprites[getSpriteID()]->update();
 
-    // Possible rouding?  It's pretty broken right now, but could be useful.
-    //mTempX += mVelocityX * elapsed_time_ms;
-    //mX = round(mTempX);
-
-    //mTempY += mVelocityY * elapsed_time_ms;
-    //mY = round(mTempY);
-
     // Start tile-based movement updates
     if (isWalking == true && atTarget == false) {
-        mX += mVelocityX;
-        mY += mVelocityY;
+        mPlayerRect.x += mVelocityX;
+        mPlayerRect.y += mVelocityY;
     }
 
     // Check if player has reached target, if so, make atTarget true
-    if (mX == mTargetX && mY == mTargetY) atTarget = true;
+    if (mPlayerRect.x == mTargetX && mPlayerRect.y == mTargetY) atTarget = true;
 
     // Player has reached target, they must now stop
     if (atTarget == true && isWalking == true) stopMoving();
@@ -81,7 +82,7 @@ void Player::update() {
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
     // Drawing with the 4 pixel y offset from the original game
-    mSprites[getSpriteID()]->draw(graphics, mX - camera.x, (mY - verticalDrawOffset) - camera.y);
+    mSprites[getSpriteID()]->draw(graphics, mPlayerRect.x - camera.x, (mPlayerRect.y - verticalDrawOffset) - camera.y);
 }
 
 int Player::getSpriteID() {
@@ -116,7 +117,7 @@ void Player::startMovingUp() {
     if (isWalking == false) {
         isWalking = true;
         atTarget = false;
-        mTargetY = mY - 16;
+        mTargetY = mPlayerRect.y - 16;
         mVelocityY = -walkSpeed;
         mDirectionFacing = UP;
     }
@@ -126,7 +127,7 @@ void Player::startMovingDown() {
     if (isWalking == false) {
         isWalking = true;
         atTarget = false;
-        mTargetY = mY + 16;
+        mTargetY = mPlayerRect.y + 16;
         mVelocityY = walkSpeed;
         mDirectionFacing = DOWN;
     }
@@ -136,7 +137,7 @@ void Player::startMovingLeft() {
     if (isWalking == false) {
         isWalking = true;
         atTarget = false;
-        mTargetX = mX - 16;
+        mTargetX = mPlayerRect.x - 16;
         mVelocityX = -walkSpeed;
         mDirectionFacing = LEFT;
     }
@@ -146,7 +147,7 @@ void Player::startMovingRight() {
     if (isWalking == false) {
         isWalking = true;
         atTarget = false;
-        mTargetX = mX + 16;
+        mTargetX = mPlayerRect.x + 16;
         mVelocityX = walkSpeed;
         mDirectionFacing = RIGHT;
     }
@@ -156,10 +157,4 @@ void Player::stopMoving() {
     isWalking = false;
     mVelocityX = 0;
     mVelocityY = 0;
-}
-
-void Player::close() {
-    for (std::vector<Sprite*>::iterator i = mSprites.begin(); i != mSprites.end(); i++) {
-        delete (*i);
-    }
 }

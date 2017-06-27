@@ -11,7 +11,7 @@ class Text {
         Text(Graphics& graphics, const std::string& file_path);
         ~Text();
 
-        void draw(Graphics& graphics, int x, int y, const std::string& message);
+        void print(Graphics& graphics, int x, int y, const std::string& message);
 
     protected:
         SDL_Rect mSourceRect;

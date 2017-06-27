@@ -5,9 +5,7 @@
 #include "map.h"
 #include "tilemap.h"
 #include "graphics.h"
-#include "sprite.h"
 #include "camera.h"
-#include "animated_sprite.h"
 #include "player.h"
 #include "input.h"
 #include "text.h"
@@ -27,12 +25,13 @@ class Game {
         void draw(Graphics& graphics);
         void close();
 
-        Camera* camera;
-        Tilemap tilemap;
-        Map* map;
-        AnimatedSprite* animated_sprite;
-        Player* player;
-        Text* text;
+        // Objects
+        Camera* oCamera;
+        Tilemap* oTilemap;
+        Map* oMap;
+        Player* oPlayer;
+        Text* oText;
+        Graphics* oGraphics;
 };
 
 #endif // GAME_H

@@ -8,7 +8,8 @@
 
 class Tilemap {
     public:
-        Tilemap();
+        Tilemap(Graphics& graphics, const std::string file_path);
+        ~Tilemap();
 
         SDL_Rect getTileClip(int clip) { return mTileClips[clip]; }
         SDL_Texture* getTilemap() { return mTilemap; }
@@ -17,8 +18,6 @@ class Tilemap {
         int getHeight() { return mHeight; }
 
         void draw(Graphics& graphics, int x, int y, int tileID);
-        void load(Graphics& graphics, const std::string filePath);
-        void close();
 
     private:
         SDL_Texture* mTilemap;

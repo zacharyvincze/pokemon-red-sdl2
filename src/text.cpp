@@ -17,7 +17,7 @@ Text::~Text() {
     SDL_DestroyTexture(mSpriteSheet);
 }
 
-void Text::draw(Graphics& graphics, int x, int y, const std::string& message) {
+void Text::print(Graphics& graphics, int x, int y, const std::string& message) {
     SDL_Rect destinationRectangle;
     destinationRectangle.y = y;
 
@@ -29,6 +29,9 @@ void Text::draw(Graphics& graphics, int x, int y, const std::string& message) {
     }
 }
 
+// TODO: I really don't like how this is being done too much.
+// There's a lot going on and I don't want to make the game run
+// any slower because it is trying to map the right text.
 int Text::getXPos(char iChar) {
     if (iChar >= 65 && iChar <= 80) {
         return (iChar - 65) * charWidth;

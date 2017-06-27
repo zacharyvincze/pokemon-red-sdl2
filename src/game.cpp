@@ -20,13 +20,14 @@
 
 // Game constants
 namespace {
-    const int fps = 60;
     const int frameDuration = 16;
     const int maxTimePerFrame = 200;
     int accumulatedTime = 0;
 
     int lastUpdateTime = 0;
     int currentTime = 0;
+    
+    float fps = 0;
 }
 
 int Game::kTileSize = 16;
@@ -43,15 +44,15 @@ Game::~Game() {
 }
 
 void Game::eventLoop() {
-    Graphics graphics;
+    oGraphics = new Graphics();
     Input input;        // Object for handling inputs
-    map = new Map();
-    player = new Player(graphics, 1, 2);
-    camera = new Camera();
-    text = new Text(graphics, "gfx/font.png");
+    oMap = new Map();
+    oPlayer = new Player(*oGraphics, 1, 2);
+    oCamera = new Camera();
+    oText = new Text(*oGraphics, "gfx/font.png");
+    oTilemap = new Tilemap(*oGraphics, "gfx/tilesets/overworld.png");
 
-    tilemap.load(graphics, "gfx/tilesets/overworld.png");
-    map->load(MapConst::PALLET_TOWN);
+    oMap->load(MapConst::PALLET_TOWN);
 
     SDL_Event event;    // SDL event handler
 
@@ -84,27 +85,17 @@ void Game::eventLoop() {
         if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE) || input.wasKeyPressed(SDL_SCANCODE_Q))
             running = false;
 
-        // Player movement
-        if (input.wasKeyHeld(SDL_SCANCODE_LEFT) && input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-            // player->stopMoving();
+        if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
+            oPlayer->startMovingUp();
         }
-        else if (input.wasKeyHeld(SDL_SCANCODE_UP) && input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            // player->stopMoving();
+        if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
+            oPlayer->startMovingDown();
         }
-        else if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
-            player->startMovingUp();
+        if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
+            oPlayer->startMovingLeft();
         }
-        else if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            player->startMovingDown();
-        }
-        else if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
-            player->startMovingLeft();
-        }
-        else if (input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-            player->startMovingRight();
-        }
-        else {
-            // player->stopMoving();
+        if (input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
+            oPlayer->startMovingRight();
         }
 
         // Update
@@ -115,7 +106,7 @@ void Game::eventLoop() {
         lastUpdateTime = SDL_GetTicks();
 
         // Render
-        draw(graphics);
+        draw(*oGraphics);
 
         // Cap the frame rate
         if (SDL_GetTicks() - currentTime < frameDuration) {
@@ -124,35 +115,35 @@ void Game::eventLoop() {
 
         // Measure frames per second
         const float seconds_per_frame = (SDL_GetTicks() - currentTime) / 1000.0;
-        const float fps = 1 / seconds_per_frame;
+        fps = 1 / seconds_per_frame;
         printf("fps=%f\n", fps);
     }
 }
 
 void Game::update() {
-    player->update();
-    camera->update(*player, *map);     // Update the camera's position
-    // animated_sprite->update(elapsed_time_ms);
+    oPlayer->update();
+    oCamera->update(*oPlayer, *oMap);   // Update the oCamera's position
 }
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    map->draw(graphics, tilemap, camera->getCamera());          // Draw the map
-    player->draw(graphics, camera->getCamera());
-    text->draw(graphics, 0, 0, "abcd ABCD 0123456789");
+    oMap->draw(graphics, *oTilemap, oCamera->getCameraRect());         // Draw the map
+    oPlayer->draw(graphics, oCamera->getCameraRect());
+    oText->print(graphics, 0, 0, std::to_string(oPlayer->getPlayerRect().x));
+    oText->print(graphics, 0, 8, std::to_string(oPlayer->getPlayerRect().y));
+    oText->print(graphics, 0, 16, std::to_string(oCamera->getCameraRect().x));
+    oText->print(graphics, 0, 24, std::to_string(oCamera->getCameraRect().y));
     graphics.present();                                                 // Present the renderer
-    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", player->getX(), player->getY(), camera->getCamera().x, camera->getCamera().y);
-    printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", player->getX() - camera->getCamera().x, player->getY() - camera->getCamera().y);
+    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", oPlayer->getPlayerRect().x, oPlayer->getPlayerRect().y, oCamera->getCameraRect().x, oCamera->getCameraRect().y);
+    printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getPlayerRect().x - oCamera->getCameraRect().x, oPlayer->getPlayerRect().y - oCamera->getCameraRect().y);
 }
 
 void Game::close() {
-    tilemap.close();
-    // animated_sprite->close();
-    player->close();
-    delete animated_sprite;
-    delete player;
-    delete map;
-    delete camera;
+    delete oPlayer;
+    delete oMap;
+    delete oCamera;
+    delete oText;
+    delete oTilemap;
     IMG_Quit();
     SDL_Quit();
 }

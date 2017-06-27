@@ -9,6 +9,7 @@
 class Player {
     public:
         Player(Graphics& graphics, int x, int y);
+        ~Player();
 
         void draw(Graphics& graphics, SDL_Rect& camera);
         void update();
@@ -31,10 +32,7 @@ class Player {
             RIGHT
         };
 
-        void close();
-
-        int getX() { return mX; }
-        int getY() { return mY; }
+        SDL_Rect getPlayerRect() { return mPlayerRect; }
 
     private:
         int getSpriteID();
@@ -46,6 +44,8 @@ class Player {
         float mVelocityX, mVelocityY, mTempX, mTempY;
 
         std::vector<Sprite*> mSprites;
+        
+        SDL_Rect mPlayerRect;
 };
 
 #endif // PLAYER_H

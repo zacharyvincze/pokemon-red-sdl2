@@ -9,14 +9,10 @@
 #include "tilemap.h"
 
 // Initailize the tilemap class
-Tilemap::Tilemap() {
+Tilemap::Tilemap(Graphics& graphics, const std::string file_path) {
     mWidth = 0;
     mHeight = 0;
-}
-
-// Load the tilemap from a png image file
-void Tilemap::load(Graphics& graphics, const std::string filePath) {
-    mTilemap = graphics.loadImage(filePath);                    // Load selected tileset
+    mTilemap = graphics.loadImage(file_path);                    // Load selected tileset
     SDL_QueryTexture(mTilemap, NULL, NULL, &mWidth, &mHeight);  // Get image height and width
     mTileClips.resize((mWidth / 16) * (mHeight / 16));          // Resize the tileset vector to the image height and width
 
@@ -33,14 +29,14 @@ void Tilemap::load(Graphics& graphics, const std::string filePath) {
     }
 }
 
+Tilemap::~Tilemap() {
+    SDL_DestroyTexture(mTilemap);
+}
+
 // Draw a single tile
 void Tilemap::draw(Graphics& graphics, int x, int y, int tileID) {
     SDL_Rect destinationRectangle;                                          // Rectagle, where to draw to the screen
     destinationRectangle.x = x;                                             // Set destination rectangle X
     destinationRectangle.y = y;                                             // Set destination rectangle Y
     graphics.render(mTilemap, &mTileClips[tileID], &destinationRectangle);  // Render the tile
-}
-
-void Tilemap::close() {
-    SDL_DestroyTexture(mTilemap);
 }
