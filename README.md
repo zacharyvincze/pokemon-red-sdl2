@@ -3,7 +3,7 @@ Pokemon Red/Blue reconstructed in SDL2.  Mainly for game development and engine 
 
 *(This project is very early into development right now, the engine is being created completely from scratch)*
 
-![Screenshot](/screenshots/cover.png)
+![Screenshot](/screenshots/cover2.png)
 
 ## Resources Used
 All spritesheets were obtained from [the Spriter's Resource](https://www.spriters-resource.com/game_boy_gbc/pokemonredblue/).
