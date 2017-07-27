@@ -3,7 +3,6 @@
 
 #include <boost/scoped_ptr.hpp>
 #include "map.h"
-#include "tilemap.h"
 #include "graphics.h"
 #include "camera.h"
 #include "player.h"
@@ -23,15 +22,18 @@ class Game {
         void eventLoop();
         void update();
         void draw(Graphics& graphics);
-        void close();
+        void input();
 
         // Objects
         Camera* oCamera;
-        Tilemap* oTilemap;
+        Tileset* oTileset;
         Map* oMap;
         Player* oPlayer;
         Text* oText;
         Graphics* oGraphics;
+        Input* oInput;
+        
+        SDL_Event event;
 };
 
 #endif // GAME_H

@@ -2,27 +2,20 @@
 #define MAP_H
 
 #include <vector>
-#include "tilemap.h"
+#include "tileset.h"
 
 class Map {
     public:
         Map();
 
-        void fillMap(int tileID);
-
         void setTile(int x, int y, int tileID) { map[y][x] = tileID; }
-
-        void setWidth(int w) { mWidth = w; }
-        void setHeight(int h) { mHeight = h; }
 
         int getWidth() { return mWidth; }
         int getHeight() { return mHeight; }
-        int getTile(int x, int y) { return map[y][x]; }
-        int getSize() { return mTotalSize; }
 
-        void draw(Graphics& graphics, Tilemap& tilemap, SDL_Rect& camera);
+        void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
 
-        void load(int map_id);
+        void load(const int map_tiles[], const int width, const int height);
 
     private:
          std::vector<std::vector<int> > map;

@@ -13,8 +13,10 @@
 // Camera constants
 namespace {
     // const float kCameraSpeed = 0.06f;   // Camera movement speed
-    const int kCameraWidth = 160;       // Viewport width
+    const int kCameraWidth = 256;       // Viewport width
     const int kCameraHeight = 144;      // Viewport height
+    
+    const int tileSize = 16;
 }
 
 // Initialize the mCameraRect class
@@ -36,10 +38,10 @@ void Camera::update(Player& player, Map& map) {
     if (mCameraRect.y < 0) {
         mCameraRect.y = 0;
     }
-    if (mCameraRect.x > (map.getWidth() * 16) - mCameraRect.w) {
-        mCameraRect.x = (map.getWidth() * 16) - mCameraRect.w;
+    if (mCameraRect.x > (map.getWidth() * tileSize) - mCameraRect.w) {
+        mCameraRect.x = (map.getWidth() * tileSize) - mCameraRect.w;
     }
-    if (mCameraRect.y > (map.getHeight() * 16) - mCameraRect.h) {
-        mCameraRect.y = (map.getHeight() * 16) - mCameraRect.h;
+    if (mCameraRect.y > (map.getHeight() * tileSize) - mCameraRect.h) {
+        mCameraRect.y = (map.getHeight() * tileSize) - mCameraRect.h;
     }
 }

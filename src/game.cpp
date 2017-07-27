@@ -7,13 +7,14 @@
 */
 
 #include "game.h"
-#include "tilemap.h"
 #include "map.h"
 #include "input.h"
 #include "camera.h"
 #include "graphics.h"
 #include "constants.cpp"
 #include "text.h"
+
+#include "data/maps/pallet_town.cpp"
 
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
@@ -28,6 +29,8 @@ namespace {
     int currentTime = 0;
     
     float fps = 0;
+    
+    bool running = true;
 }
 
 int Game::kTileSize = 16;
@@ -35,28 +38,34 @@ int Game::kTileSize = 16;
 Game::Game() {
     SDL_Init(SDL_INIT_VIDEO);   // Initialize SDL
     IMG_Init(IMG_INIT_PNG);
+    
+    oGraphics = new Graphics();
+    oInput = new Input();
+    oMap = new Map();
+    oPlayer = new Player(*oGraphics, 1, 2);
+    oCamera = new Camera();
+    oText = new Text(*oGraphics, "gfx/font.png");
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/tileset.png");
+    
     eventLoop();                // Run the game's event loop
 }
 
 // Quit the SDL subsystems
 Game::~Game() {
-    close();
+    delete oPlayer;
+    delete oMap;
+    delete oCamera;
+    delete oText;
+    delete oTileset;
+    delete oGraphics;
+    delete oInput;
+    IMG_Quit();
+    SDL_Quit();
 }
 
 void Game::eventLoop() {
-    oGraphics = new Graphics();
-    Input input;        // Object for handling inputs
-    oMap = new Map();
-    oPlayer = new Player(*oGraphics, 1, 2);
-    oCamera = new Camera();
-    oText = new Text(*oGraphics, "gfx/font.png");
-    oTilemap = new Tilemap(*oGraphics, "gfx/tilesets/overworld.png");
+    oMap->load(pallet_town::MAP_TILES, pallet_town::MAP_WIDTH, pallet_town::MAP_HEIGHT);
 
-    oMap->load(MapConst::PALLET_TOWN);
-
-    SDL_Event event;    // SDL event handler
-
-    bool running = true;                    // Loop flag
     lastUpdateTime = SDL_GetTicks();
 
     while(running) {
@@ -65,38 +74,7 @@ void Game::eventLoop() {
 
         // if (accumulatedTime > maxTimePerFrame) accumulatedTime = maxTimePerFrame;
 
-        // Get keydown and keyup events for the input object
-        while(SDL_PollEvent(&event) != 0) {
-            switch (event.type) {
-                case SDL_KEYDOWN:
-                    if (!event.key.repeat)
-                        input.keyDownEvent(event);
-                    break;
-                case SDL_KEYUP:
-                    input.keyUpEvent(event);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        // Different inputs
-        // If user requests a quit (Either using ESCAPE or Q)
-        if (input.wasKeyPressed(SDL_SCANCODE_ESCAPE) || input.wasKeyPressed(SDL_SCANCODE_Q))
-            running = false;
-
-        if (input.wasKeyHeld(SDL_SCANCODE_UP)) {
-            oPlayer->startMovingUp();
-        }
-        if (input.wasKeyHeld(SDL_SCANCODE_DOWN)) {
-            oPlayer->startMovingDown();
-        }
-        if (input.wasKeyHeld(SDL_SCANCODE_LEFT)) {
-            oPlayer->startMovingLeft();
-        }
-        if (input.wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-            oPlayer->startMovingRight();
-        }
+        input();
 
         // Update
         //while (accumulatedTime >= frameDuration) {
@@ -127,7 +105,7 @@ void Game::update() {
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    oMap->draw(graphics, *oTilemap, oCamera->getCameraRect());         // Draw the map
+    oMap->draw(graphics, *oTileset, oCamera->getCameraRect());         // Draw the map
     oPlayer->draw(graphics, oCamera->getCameraRect());
     oText->print(graphics, 0, 0, std::to_string(oPlayer->getPlayerRect().x));
     oText->print(graphics, 0, 8, std::to_string(oPlayer->getPlayerRect().y));
@@ -138,12 +116,37 @@ void Game::draw(Graphics& graphics) {
     printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getPlayerRect().x - oCamera->getCameraRect().x, oPlayer->getPlayerRect().y - oCamera->getCameraRect().y);
 }
 
-void Game::close() {
-    delete oPlayer;
-    delete oMap;
-    delete oCamera;
-    delete oText;
-    delete oTilemap;
-    IMG_Quit();
-    SDL_Quit();
+void Game::input() {
+    // Get keydown and keyup events for the input object
+    while(SDL_PollEvent(&event) != 0) {
+        switch (event.type) {
+            case SDL_KEYDOWN:
+                if (!event.key.repeat)
+                    oInput->keyDownEvent(event);
+                break;
+            case SDL_KEYUP:
+                oInput->keyUpEvent(event);
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Different inputs
+    // If user requests a quit (Either using ESCAPE or Q)
+    if (oInput->wasKeyPressed(SDL_SCANCODE_ESCAPE) || oInput->wasKeyPressed(SDL_SCANCODE_Q))
+        running = false;
+
+    if (oInput->wasKeyHeld(SDL_SCANCODE_UP)) {
+        oPlayer->startMovingUp();
+    }
+    if (oInput->wasKeyHeld(SDL_SCANCODE_DOWN)) {
+        oPlayer->startMovingDown();
+    }
+    if (oInput->wasKeyHeld(SDL_SCANCODE_LEFT)) {
+        oPlayer->startMovingLeft();
+    }
+    if (oInput->wasKeyHeld(SDL_SCANCODE_RIGHT)) {
+        oPlayer->startMovingRight();
+    }
 }

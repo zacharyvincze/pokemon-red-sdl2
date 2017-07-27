@@ -11,10 +11,10 @@
 
 // Graphic constants
 namespace {
-    const int kScreenWidth = 160;   // Window width
+    const int kScreenWidth = 256;   // Window width
     const int kScreenHeight = 144;  // Window height
 
-    const int kRendererWidth = 160;     // Renderer width
+    const int kRendererWidth = 256;     // Renderer width
     const int kRendererHeight = 144;    // Renderer height
 
     const int kRendererRed = 0;     // Renderer draw color (red)
