@@ -8,8 +8,10 @@
 #include "player.h"
 #include "input.h"
 #include "text.h"
+#include "npc.h"
 
 #include <chrono>
+#include <vector>
 
 class Game {
     public:
@@ -32,6 +34,8 @@ class Game {
         Text* oText;
         Graphics* oGraphics;
         Input* oInput;
+        
+        std::vector<NPC*> oNPCS;
         
         SDL_Event event;
 };

@@ -27,7 +27,7 @@ Camera::Camera() {
     mCameraRect.h = kCameraHeight;
 }
 
-void Camera::update(Player& player, Map& map) {
+void Camera::update(Player& player, SDL_Rect& mapRect) {
 
     mCameraRect.x = round(player.getPlayerRect().x - 80);
     mCameraRect.y = round(player.getPlayerRect().y - 60);
@@ -38,10 +38,10 @@ void Camera::update(Player& player, Map& map) {
     if (mCameraRect.y < 0) {
         mCameraRect.y = 0;
     }
-    if (mCameraRect.x > (map.getWidth() * tileSize) - mCameraRect.w) {
-        mCameraRect.x = (map.getWidth() * tileSize) - mCameraRect.w;
+    if (mCameraRect.x > (mapRect.w * tileSize) - mCameraRect.w) {
+        mCameraRect.x = (mapRect.w * tileSize) - mCameraRect.w;
     }
-    if (mCameraRect.y > (map.getHeight() * tileSize) - mCameraRect.h) {
-        mCameraRect.y = (map.getHeight() * tileSize) - mCameraRect.h;
+    if (mCameraRect.y > (mapRect.h * tileSize) - mCameraRect.h) {
+        mCameraRect.y = (mapRect.h * tileSize) - mCameraRect.h;
     }
 }

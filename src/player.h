@@ -3,16 +3,18 @@
 
 #include "sprite.h"
 #include "animated_sprite.h"
+#include "map.h"
 
 #include <vector>
 
 class Player {
     public:
-        Player(Graphics& graphics, int x, int y);
+        Player(Graphics& graphics, int x, int y, const std::string& file_path);
         ~Player();
 
         void draw(Graphics& graphics, SDL_Rect& camera);
-        void update();
+        void draw(Graphics& graphics);
+        void update(SDL_Rect& mapRect);
 
         void startMovingUp();
         void startMovingDown();
@@ -42,6 +44,7 @@ class Player {
 
         int mX, mY, mTargetX, mTargetY;
         float mVelocityX, mVelocityY, mTempX, mTempY;
+        bool isWalking, atTarget;
 
         std::vector<Sprite*> mSprites;
         

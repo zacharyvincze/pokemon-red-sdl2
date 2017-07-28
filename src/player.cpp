@@ -10,8 +10,6 @@
 #include "game.h"
 
 namespace {
-    const std::string spriteFilePath = "gfx/sprites/red.png";
-
     const float walkSpeed = 1;             // Pixles moved per frame
     const int playerFrame = 0;
 
@@ -20,12 +18,9 @@ namespace {
     const int numWalkFrames = 4;
     const int numSidewayWalkFrames = 2;
     const int walkFps = 10;                // Change frames after certain amount of frames have passed
-
-    bool isWalking = false;
-    bool atTarget = true;
 }
 
-Player::Player(Graphics& graphics, int x, int y) {
+Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) {
     mPlayerRect.x = x * 16;
     mPlayerRect.y = y * 16;
     mPlayerRect.w = 16;
@@ -36,23 +31,22 @@ Player::Player(Graphics& graphics, int x, int y) {
     mTargetY = y * 16;
     mVelocityX = 0;
     mVelocityY = 0;
-    mSprites.resize(8);
 
     mDirectionFacing = RIGHT;
     mMotionType = WALKING;
 
     // Load sprites
     // ----- STATIC SPRITES
-    mSprites[0] = new Sprite(graphics, spriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize);
-    mSprites[1] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize);
-    mSprites[2] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize);
-    mSprites[3] = new Sprite(graphics, spriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize);
+    mSprites.push_back(new Sprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize));
+    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize));
+    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize));
+    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize));
 
     // ----- ANIMATED SPRITES
-    mSprites[4] = new AnimatedSprite(graphics, spriteFilePath, 0, 0, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames);
-    mSprites[5] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames);
-    mSprites[6] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames);
-    mSprites[7] = new AnimatedSprite(graphics, spriteFilePath, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames);
+    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
+    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
+    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
+    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
 }
 
 Player::~Player() {
@@ -61,7 +55,7 @@ Player::~Player() {
     }
 }
 
-void Player::update() {
+void Player::update(SDL_Rect& mapRect) {
     mSprites[getSpriteID()]->update();
 
     // Start tile-based movement updates
@@ -70,14 +64,29 @@ void Player::update() {
         mPlayerRect.y += mVelocityY;
     }
 
+    // Map collisions
+    if (mPlayerRect.x < 0) {
+        mPlayerRect.x = 0;
+        mTargetX = 0;
+    }
+    if (mPlayerRect.x > (mapRect.w - 1) * 16) {
+        mPlayerRect.x = (mapRect.w - 1) * 16;
+        mTargetX = (mapRect.w - 1) * 16;
+    }
+    if (mPlayerRect.y < 0) {
+        mPlayerRect.y = 0;
+        mTargetY = 0;
+    }
+    if (mPlayerRect.y > (mapRect.h - 1) * 16) {
+        mPlayerRect.y = (mapRect.h - 1) * 16;
+        mTargetY = (mapRect.h - 1) * 16;
+    }
+
     // Check if player has reached target, if so, make atTarget true
     if (mPlayerRect.x == mTargetX && mPlayerRect.y == mTargetY) atTarget = true;
 
     // Player has reached target, they must now stop
     if (atTarget == true && isWalking == true) stopMoving();
-
-    printf("TARGET X: %i\n", mTargetX);
-    printf("TARGET Y: %i\n", mTargetY);
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {

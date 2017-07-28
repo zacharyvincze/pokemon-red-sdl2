@@ -10,8 +10,7 @@ class Map {
 
         void setTile(int x, int y, int tileID) { map[y][x] = tileID; }
 
-        int getWidth() { return mWidth; }
-        int getHeight() { return mHeight; }
+        SDL_Rect& getMapRect() { return mMapRect; }
 
         void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
 
@@ -19,10 +18,9 @@ class Map {
 
     private:
          std::vector<std::vector<int> > map;
-         int mWidth;
-         int mHeight;
 
          int mTotalSize;
+         SDL_Rect mMapRect;
 
          void resize();
          void clear();
