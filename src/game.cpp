@@ -62,8 +62,8 @@ Game::~Game() {
     delete oGraphics;
     delete oInput;
     
-    for (int i = 0; i < oNPCS.size(); i++) {
-        delete oNPCS[i];
+    for (std::vector<NPC*>::iterator i = oNPCS.begin(); i != oNPCS.end(); i++) {
+        delete (*i);
     }
     
     IMG_Quit();

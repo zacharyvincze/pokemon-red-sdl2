@@ -10,7 +10,6 @@
 #include "game.h"
 
 namespace {
-    const float walkSpeed = 1;             // Pixles moved per frame
     const int playerFrame = 0;
 
     const int verticalDrawOffset = 4;
