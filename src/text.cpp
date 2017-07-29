@@ -53,6 +53,10 @@ int Text::getXPos(char iChar) {
         return (iChar - 42) * charWidth;
     }
     
+    if (iChar == 46) {
+        return 8 * charWidth;
+    }
+    
     return 0;
 }
 
@@ -79,6 +83,10 @@ int Text::getYPos(char iChar) {
     
     if (iChar >= 48 && iChar <= 57) {
         return 7 * charWidth;
+    }
+    
+    if (iChar == 46) {
+        return 6 * charWidth;
     }
     
     return 0;
