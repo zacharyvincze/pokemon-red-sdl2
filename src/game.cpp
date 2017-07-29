@@ -109,6 +109,7 @@ void Game::update() {
     oPlayer->update(oMap->getMapRect());
     
     oNPCS[0]->startMovingDown();
+    oNPCS[1]->startMovingRight();
     
     for (int i = 0; i < oNPCS.size(); i++) {
         oNPCS[i]->update(oMap->getMapRect());

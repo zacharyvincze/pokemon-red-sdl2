@@ -34,21 +34,22 @@ class Player {
             RIGHT
         };
 
-        SDL_Rect getPlayerRect() { return mPlayerRect; }
+        SDL_Rect getPlayerRect() { return _player_rect; }
 
     private:
         int getSpriteID();
 
-        DirectionFacing mDirectionFacing;
-        MotionType mMotionType;
+        DirectionFacing _direction_facing;
+        MotionType _motion_type;
+        
+        int _move_time, _speed, _frames_to_cross_one_tile;
 
-        int mX, mY, mTargetX, mTargetY;
-        float mVelocityX, mVelocityY, mTempX, mTempY;
+        float mVelocityX, mVelocityY;
         bool isWalking, atTarget;
 
-        std::vector<Sprite*> mSprites;
+        std::vector<Sprite*> _sprites;
         
-        SDL_Rect mPlayerRect;
+        SDL_Rect _player_rect;
 };
 
 #endif // PLAYER_H

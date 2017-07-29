@@ -21,149 +21,119 @@ namespace {
 }
 
 Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) {
-    mPlayerRect.x = x * 16;
-    mPlayerRect.y = y * 16;
-    mPlayerRect.w = 16;
-    mPlayerRect.h = 16;
-    mTempX = x * 16;
-    mTempY = y * 16;
-    mTargetX = x * 16;
-    mTargetY = y * 16;
-    mVelocityX = 0;
-    mVelocityY = 0;
+    _player_rect.x = x * 16;
+    _player_rect.y = y * 16;
+    _player_rect.w = 16;
+    _player_rect.h = 16;
+    
+    _move_time = 0;
+    _frames_to_cross_one_tile = 16;
+    _speed = 16 / _frames_to_cross_one_tile;
 
-    mDirectionFacing = RIGHT;
-    mMotionType = WALKING;
+    _direction_facing = RIGHT;
+    _motion_type = WALKING;
 
     // Load sprites
     // ----- STATIC SPRITES
-    mSprites.push_back(new Sprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize));
-    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize));
-    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize));
-    mSprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize));
 
     // ----- ANIMATED SPRITES
-    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
-    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
-    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
-    mSprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, 0, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize, Game::kTileSize, Game::kTileSize, walkFps, numWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 2, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Game::kTileSize * 3, Game::kTileSize, Game::kTileSize, walkFps, numSidewayWalkFrames));
 }
 
 Player::~Player() {
-    for (std::vector<Sprite*>::iterator i = mSprites.begin(); i != mSprites.end(); i++) {
+    for (std::vector<Sprite*>::iterator i = _sprites.begin(); i != _sprites.end(); i++) {
         delete (*i);
     }
 }
 
 void Player::update(SDL_Rect& mapRect) {
-    mSprites[getSpriteID()]->update();
-
-    // Start tile-based movement updates
-    if (isWalking == true && atTarget == false) {
-        mPlayerRect.x += mVelocityX;
-        mPlayerRect.y += mVelocityY;
+    _sprites[getSpriteID()]->update();
+    
+    if (_move_time > 0) {
+        --_move_time;
+        switch (_direction_facing) {
+            case UP: _player_rect.y -= _speed; break;
+            case DOWN: _player_rect.y += _speed; break;
+            case LEFT: _player_rect.x -= _speed; break;
+            case RIGHT: _player_rect.x += _speed; break;
+        }
     }
-
-    // Map collisions
-    if (mPlayerRect.x < 0) {
-        mPlayerRect.x = 0;
-        mTargetX = 0;
-    }
-    if (mPlayerRect.x > (mapRect.w - 1) * 16) {
-        mPlayerRect.x = (mapRect.w - 1) * 16;
-        mTargetX = (mapRect.w - 1) * 16;
-    }
-    if (mPlayerRect.y < 0) {
-        mPlayerRect.y = 0;
-        mTargetY = 0;
-    }
-    if (mPlayerRect.y > (mapRect.h - 1) * 16) {
-        mPlayerRect.y = (mapRect.h - 1) * 16;
-        mTargetY = (mapRect.h - 1) * 16;
-    }
-
-    // Check if player has reached target, if so, make atTarget true
-    if (mPlayerRect.x == mTargetX && mPlayerRect.y == mTargetY) atTarget = true;
-
-    // Player has reached target, they must now stop
-    if (atTarget == true && isWalking == true) stopMoving();
+    
+    // Map collision detection
+    if (_player_rect.x < 0) _player_rect.x = 0;
+    if (_player_rect.x > (mapRect.w - 1) * 16) _player_rect.x = (mapRect.w - 1) * 16;
+    if (_player_rect.y < 0) _player_rect.y = 0;
+    if (_player_rect.y > (mapRect.h - 1) * 16) _player_rect.y = (mapRect.h - 1) * 16;
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
     // Drawing with the 4 pixel y offset from the original game
-    mSprites[getSpriteID()]->draw(graphics, mPlayerRect.x - camera.x, (mPlayerRect.y - verticalDrawOffset) - camera.y);
+    _sprites[getSpriteID()]->draw(graphics, _player_rect.x - camera.x, (_player_rect.y - verticalDrawOffset) - camera.y);
 }
 
 int Player::getSpriteID() {
 
-    if (mVelocityX != 0 || mVelocityY != 0) {
-        mMotionType = WALKING;
+    if (_move_time > 0) {
+        _motion_type = WALKING;
     } else {
-        mMotionType = STANDING;
+        _motion_type = STANDING;
     }
 
-    if (mDirectionFacing == UP && mMotionType == STANDING)
+    if (_direction_facing == UP && _motion_type == STANDING)
         return 0;
-    else if (mDirectionFacing == DOWN && mMotionType == STANDING)
+    else if (_direction_facing == DOWN && _motion_type == STANDING)
         return 1;
-    else if (mDirectionFacing == LEFT && mMotionType == STANDING)
+    else if (_direction_facing == LEFT && _motion_type == STANDING)
         return 2;
-    else if (mDirectionFacing == RIGHT && mMotionType == STANDING)
+    else if (_direction_facing == RIGHT && _motion_type == STANDING)
         return 3;
-    else if (mDirectionFacing == UP && mMotionType == WALKING)
+    else if (_direction_facing == UP && _motion_type == WALKING)
         return 4;
-    else if (mDirectionFacing == DOWN && mMotionType == WALKING)
+    else if (_direction_facing == DOWN && _motion_type == WALKING)
         return 5;
-    else if (mDirectionFacing == LEFT && mMotionType == WALKING)
+    else if (_direction_facing == LEFT && _motion_type == WALKING)
         return 6;
-    else if (mDirectionFacing == RIGHT && mMotionType == WALKING)
+    else if (_direction_facing == RIGHT && _motion_type == WALKING)
         return 7;
     else
         return 0;
 }
 
 void Player::startMovingUp() {
-    if (isWalking == false) {
-        isWalking = true;
-        atTarget = false;
-        mTargetY = mPlayerRect.y - 16;
-        mVelocityY = -walkSpeed;
-        mDirectionFacing = UP;
+    if (_move_time <= 0) {
+        _direction_facing = UP;
+        _move_time = _frames_to_cross_one_tile;
     }
 }
 
 void Player::startMovingDown() {
-    if (isWalking == false) {
-        isWalking = true;
-        atTarget = false;
-        mTargetY = mPlayerRect.y + 16;
-        mVelocityY = walkSpeed;
-        mDirectionFacing = DOWN;
+    if (_move_time <= 0) {
+        _direction_facing = DOWN;
+        _move_time = _frames_to_cross_one_tile;
     }
 }
 
 void Player::startMovingLeft() {
-    if (isWalking == false) {
-        isWalking = true;
-        atTarget = false;
-        mTargetX = mPlayerRect.x - 16;
-        mVelocityX = -walkSpeed;
-        mDirectionFacing = LEFT;
+    if (_move_time <= 0) {
+        _direction_facing = LEFT;
+        _move_time = _frames_to_cross_one_tile;
     }
 }
 
 void Player::startMovingRight() {
-    if (isWalking == false) {
-        isWalking = true;
-        atTarget = false;
-        mTargetX = mPlayerRect.x + 16;
-        mVelocityX = walkSpeed;
-        mDirectionFacing = RIGHT;
+    if (_move_time <= 0) {
+        _direction_facing = RIGHT;
+        _move_time = _frames_to_cross_one_tile;
     }
 }
 
 void Player::stopMoving() {
-    isWalking = false;
-    mVelocityX = 0;
-    mVelocityY = 0;
+    _move_time = 0;
 }
