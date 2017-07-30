@@ -102,13 +102,13 @@ void Game::eventLoop() {
 }
 
 void Game::update() {
-    oPlayer->update(oMap->getMapRect());
+    oPlayer->update(*oMap);
     
     oNPCS[0]->move(1);
     oNPCS[1]->move(3);
     
     for (int i = 0; i < oNPCS.size(); i++) {
-        oNPCS[i]->update(oMap->getMapRect());
+        oNPCS[i]->update(*oMap);
     }
     
     oCamera->update(*oPlayer, oMap->getMapRect());   // Update the oCamera's position
@@ -128,6 +128,7 @@ void Game::draw(Graphics& graphics) {
     oText->print(graphics, 0, 16, std::to_string(oCamera->getCameraRect().x));
     oText->print(graphics, 0, 24, std::to_string(oCamera->getCameraRect().y));
     oText->print(graphics, 0, 32, std::to_string(fps));
+    oText->print(graphics, 0, 40, std::to_string(oPlayer->getMoveTime()));
     graphics.present();                                                 // Present the renderer
     printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", oPlayer->getPlayerRect().x, oPlayer->getPlayerRect().y, oCamera->getCameraRect().x, oCamera->getCameraRect().y);
     printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getPlayerRect().x - oCamera->getCameraRect().x, oPlayer->getPlayerRect().y - oCamera->getCameraRect().y);

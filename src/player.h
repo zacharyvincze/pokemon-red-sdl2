@@ -14,11 +14,13 @@ class Player {
 
         void draw(Graphics& graphics, SDL_Rect& camera);
         void draw(Graphics& graphics);
-        void update(SDL_Rect& mapRect);
+        void update(Map& map);
 
         void move(int direction);
         void stop();
         void turn(int direction);
+        
+        int getMoveTime() { return _move_time; }
 
         enum MotionType {
             WALKING,
@@ -40,13 +42,10 @@ class Player {
         DirectionFacing _direction_facing;
         MotionType _motion_type;
         
-        int _move_time, _speed, _frames_to_cross_one_tile;
-
-        float mVelocityX, mVelocityY;
-        bool isWalking, atTarget;
-
-        std::vector<Sprite*> _sprites;
+        void correctCollision(Map& map);
         
+        int _move_time, _speed, _frames_to_cross_one_tile;
+        std::vector<Sprite*> _sprites;
         SDL_Rect _player_rect;
 };
 

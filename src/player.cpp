@@ -52,7 +52,7 @@ Player::~Player() {
     }
 }
 
-void Player::update(SDL_Rect& mapRect) {
+void Player::update(Map& map) {
     _sprites[getSpriteID()]->update();
     
     if (_move_time > 0) {
@@ -65,11 +65,7 @@ void Player::update(SDL_Rect& mapRect) {
         }
     }
     
-    // Map collision detection
-    if (_player_rect.x < 0) _player_rect.x = 0;
-    if (_player_rect.x > (mapRect.w - 1) * 16) _player_rect.x = (mapRect.w - 1) * 16;
-    if (_player_rect.y < 0) _player_rect.y = 0;
-    if (_player_rect.y > (mapRect.h - 1) * 16) _player_rect.y = (mapRect.h - 1) * 16;
+    correctCollision(map);
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -106,6 +102,8 @@ void Player::move(int direction) {
         }
         _move_time = _frames_to_cross_one_tile;
     }
+    
+    else if (_move_time <= 1 && direction == _direction_facing) _move_time += _frames_to_cross_one_tile;
 }
 
 void Player::turn(int direction) {
@@ -117,6 +115,14 @@ void Player::turn(int direction) {
             case 3: _direction_facing = EAST; break;
         }
     }
+}
+
+void Player::correctCollision(Map& map) {
+    // Map edge collisions
+    if (_player_rect.x < 0) _player_rect.x = 0;
+    if (_player_rect.x > (map.getMapRect().w - 1) * 16) _player_rect.x = (map.getMapRect().w - 1) * 16;
+    if (_player_rect.y < 0) _player_rect.y = 0;
+    if (_player_rect.y > (map.getMapRect().h - 1) * 16) _player_rect.y = (map.getMapRect().h - 1) * 16;
 }
 
 void Player::stop() {
