@@ -14,14 +14,12 @@
 #include "constants.cpp"
 #include "text.h"
 
-#include "data/maps/pallet_town.cpp"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 // Game constants
 namespace {
-    const float frameDuration = 16.67f;
+    const float frameDuration = 16;
     const int maxTimePerFrame = 200;
     int accumulatedTime = 0;
 
@@ -41,7 +39,7 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    oMap = new Map();
+    oMap = new Map("src/data/maps/pallet_town.dat", 20, 18);
     oPlayer = new Player(*oGraphics, 1, 2, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
@@ -71,8 +69,6 @@ Game::~Game() {
 }
 
 void Game::eventLoop() {
-    oMap->load(pallet_town::MAP_TILES, pallet_town::MAP_WIDTH, pallet_town::MAP_HEIGHT);
-
     lastUpdateTime = SDL_GetTicks();
 
     while(running) {
@@ -108,8 +104,8 @@ void Game::eventLoop() {
 void Game::update() {
     oPlayer->update(oMap->getMapRect());
     
-    oNPCS[0]->startMovingDown();
-    oNPCS[1]->startMovingRight();
+    oNPCS[0]->move(1);
+    oNPCS[1]->move(3);
     
     for (int i = 0; i < oNPCS.size(); i++) {
         oNPCS[i]->update(oMap->getMapRect());
@@ -159,15 +155,15 @@ void Game::input() {
         running = false;
 
     if (oInput->wasKeyHeld(SDL_SCANCODE_UP)) {
-        oPlayer->startMovingUp();
+        oPlayer->move(0);
     }
     if (oInput->wasKeyHeld(SDL_SCANCODE_DOWN)) {
-        oPlayer->startMovingDown();
+        oPlayer->move(1);
     }
     if (oInput->wasKeyHeld(SDL_SCANCODE_LEFT)) {
-        oPlayer->startMovingLeft();
+        oPlayer->move(2);
     }
     if (oInput->wasKeyHeld(SDL_SCANCODE_RIGHT)) {
-        oPlayer->startMovingRight();
+        oPlayer->move(3);
     }
 }

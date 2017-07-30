@@ -16,11 +16,9 @@ class Player {
         void draw(Graphics& graphics);
         void update(SDL_Rect& mapRect);
 
-        void startMovingUp();
-        void startMovingDown();
-        void startMovingLeft();
-        void startMovingRight();
-        void stopMoving();
+        void move(int direction);
+        void stop();
+        void turn(int direction);
 
         enum MotionType {
             WALKING,
@@ -28,10 +26,10 @@ class Player {
         };
 
         enum DirectionFacing {
-            UP,
-            DOWN,
-            LEFT,
-            RIGHT
+            NORTH,
+            SOUTH,
+            WEST,
+            EAST
         };
 
         SDL_Rect getPlayerRect() { return _player_rect; }

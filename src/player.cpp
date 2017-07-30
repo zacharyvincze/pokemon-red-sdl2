@@ -29,7 +29,7 @@ Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) {
     _frames_to_cross_one_tile = 16;
     _speed = 16 / _frames_to_cross_one_tile;
 
-    _direction_facing = RIGHT;
+    _direction_facing = EAST;
     _motion_type = WALKING;
 
     // Load sprites
@@ -58,10 +58,10 @@ void Player::update(SDL_Rect& mapRect) {
     if (_move_time > 0) {
         --_move_time;
         switch (_direction_facing) {
-            case UP: _player_rect.y -= _speed; break;
-            case DOWN: _player_rect.y += _speed; break;
-            case LEFT: _player_rect.x -= _speed; break;
-            case RIGHT: _player_rect.x += _speed; break;
+            case NORTH: _player_rect.y -= _speed; break;
+            case SOUTH: _player_rect.y += _speed; break;
+            case WEST: _player_rect.x -= _speed; break;
+            case EAST: _player_rect.x += _speed; break;
         }
     }
     
@@ -85,54 +85,40 @@ int Player::getSpriteID() {
         _motion_type = STANDING;
     }
 
-    if (_direction_facing == UP && _motion_type == STANDING)
-        return 0;
-    else if (_direction_facing == DOWN && _motion_type == STANDING)
-        return 1;
-    else if (_direction_facing == LEFT && _motion_type == STANDING)
-        return 2;
-    else if (_direction_facing == RIGHT && _motion_type == STANDING)
-        return 3;
-    else if (_direction_facing == UP && _motion_type == WALKING)
-        return 4;
-    else if (_direction_facing == DOWN && _motion_type == WALKING)
-        return 5;
-    else if (_direction_facing == LEFT && _motion_type == WALKING)
-        return 6;
-    else if (_direction_facing == RIGHT && _motion_type == WALKING)
-        return 7;
-    else
-        return 0;
+    if (_direction_facing == NORTH && _motion_type == STANDING) return 0;
+    else if (_direction_facing == SOUTH && _motion_type == STANDING) return 1;
+    else if (_direction_facing == WEST && _motion_type == STANDING) return 2;
+    else if (_direction_facing == EAST && _motion_type == STANDING) return 3;
+    else if (_direction_facing == NORTH && _motion_type == WALKING) return 4;
+    else if (_direction_facing == SOUTH && _motion_type == WALKING) return 5;
+    else if (_direction_facing == WEST && _motion_type == WALKING) return 6;
+    else if (_direction_facing == EAST && _motion_type == WALKING) return 7;
+    else return 0;
 }
 
-void Player::startMovingUp() {
+void Player::move(int direction) {
     if (_move_time <= 0) {
-        _direction_facing = UP;
+        switch (direction) {
+            case 0: _direction_facing = NORTH; break;
+            case 1: _direction_facing = SOUTH; break;
+            case 2: _direction_facing = WEST; break;
+            case 3: _direction_facing = EAST; break;
+        }
         _move_time = _frames_to_cross_one_tile;
     }
 }
 
-void Player::startMovingDown() {
+void Player::turn(int direction) {
     if (_move_time <= 0) {
-        _direction_facing = DOWN;
-        _move_time = _frames_to_cross_one_tile;
+        switch (direction) {
+            case 0: _direction_facing = NORTH; break;
+            case 1: _direction_facing = SOUTH; break;
+            case 2: _direction_facing = WEST; break;
+            case 3: _direction_facing = EAST; break;
+        }
     }
 }
 
-void Player::startMovingLeft() {
-    if (_move_time <= 0) {
-        _direction_facing = LEFT;
-        _move_time = _frames_to_cross_one_tile;
-    }
-}
-
-void Player::startMovingRight() {
-    if (_move_time <= 0) {
-        _direction_facing = RIGHT;
-        _move_time = _frames_to_cross_one_tile;
-    }
-}
-
-void Player::stopMoving() {
+void Player::stop() {
     _move_time = 0;
 }

@@ -6,25 +6,17 @@
 
 class Map {
     public:
-        Map();
-
-        void setTile(int x, int y, int tileID) { map[y][x] = tileID; }
+        Map(const std::string& file_path, const int width, const int height);
 
         SDL_Rect& getMapRect() { return mMapRect; }
 
         void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
 
-        void load(const int map_tiles[], const int width, const int height);
-
     private:
-         std::vector<std::vector<int> > map;
+         std::vector<std::vector<int> > _map;
 
          int mTotalSize;
          SDL_Rect mMapRect;
-
-         void resize();
-         void clear();
-         void insert(const int maptiles[]);
 };
 
 #endif // MAP_H
