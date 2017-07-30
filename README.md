@@ -27,3 +27,6 @@ submitted by [Polar Koala](https://www.spriters-resource.com/submitter/Polar+Koa
    * &darr; as down on D-Pad
    * &rarr; as right on D-Pad
    * &larr; as left on D-Pad
+   
+   ## Notes
+   * Run the program from the root project directory (`bin/./pokemon`) to load media properly.
