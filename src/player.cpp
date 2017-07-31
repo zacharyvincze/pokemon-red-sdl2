@@ -28,6 +28,8 @@ Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) {
     _move_time = 0;
     _frames_to_cross_one_tile = 16;
     _speed = 16 / _frames_to_cross_one_tile;
+    
+    _current_tile = 0;
 
     _direction_facing = EAST;
     _motion_type = WALKING;
@@ -65,7 +67,16 @@ void Player::update(Map& map) {
         }
     }
     
-    correctCollision(map);
+    _current_tile = map.getTile(_player_rect.x / 16, _player_rect.y / 16);
+    
+    if (checkCollision(map)) {
+        switch (_direction_facing) {
+            case NORTH: _player_rect.y += _speed; break;
+            case SOUTH: _player_rect.y -= _speed; break;
+            case WEST: _player_rect.x += _speed; break;
+            case EAST: _player_rect.x -= _speed; break;
+        }
+    }
 }
 
 void Player::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -117,12 +128,14 @@ void Player::turn(int direction) {
     }
 }
 
-void Player::correctCollision(Map& map) {
+bool Player::checkCollision(Map& map) {
     // Map edge collisions
-    if (_player_rect.x < 0) _player_rect.x = 0;
-    if (_player_rect.x > (map.getMapRect().w - 1) * 16) _player_rect.x = (map.getMapRect().w - 1) * 16;
-    if (_player_rect.y < 0) _player_rect.y = 0;
-    if (_player_rect.y > (map.getMapRect().h - 1) * 16) _player_rect.y = (map.getMapRect().h - 1) * 16;
+    if (_player_rect.x < 0) return true;
+    if (_player_rect.x > (map.getMapRect().w - 1) * 16) return true;
+    if (_player_rect.y < 0) return true;
+    if (_player_rect.y > (map.getMapRect().h - 1) * 16) return true;
+    
+    return false;
 }
 
 void Player::stop() {

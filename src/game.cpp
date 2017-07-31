@@ -129,6 +129,7 @@ void Game::draw(Graphics& graphics) {
     oText->print(graphics, 0, 24, std::to_string(oCamera->getCameraRect().y));
     oText->print(graphics, 0, 32, std::to_string(fps));
     oText->print(graphics, 0, 40, std::to_string(oPlayer->getMoveTime()));
+    oText->print(graphics, 0, 48, std::to_string(oPlayer->getCurrentTile()));
     graphics.present();                                                 // Present the renderer
     printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", oPlayer->getPlayerRect().x, oPlayer->getPlayerRect().y, oCamera->getCameraRect().x, oCamera->getCameraRect().y);
     printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getPlayerRect().x - oCamera->getCameraRect().x, oPlayer->getPlayerRect().y - oCamera->getCameraRect().y);

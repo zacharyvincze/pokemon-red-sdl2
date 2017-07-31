@@ -21,6 +21,7 @@ class Player {
         void turn(int direction);
         
         int getMoveTime() { return _move_time; }
+        int getCurrentTile() { return _current_tile; }
 
         enum MotionType {
             WALKING,
@@ -42,9 +43,9 @@ class Player {
         DirectionFacing _direction_facing;
         MotionType _motion_type;
         
-        void correctCollision(Map& map);
+        bool checkCollision(Map& map);
         
-        int _move_time, _speed, _frames_to_cross_one_tile;
+        int _move_time, _speed, _frames_to_cross_one_tile, _current_tile;
         std::vector<Sprite*> _sprites;
         SDL_Rect _player_rect;
 };

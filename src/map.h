@@ -11,6 +11,8 @@ class Map {
         SDL_Rect& getMapRect() { return mMapRect; }
         std::vector<std::vector<int> > getMap() { return _map; }
         
+        int getTile(int x, int y) { return _map[y][x]; }
+        
         void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
 
     private:
