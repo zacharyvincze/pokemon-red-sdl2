@@ -1,53 +1,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "sprite.h"
-#include "animated_sprite.h"
-#include "map.h"
+#include "entity.h"
+#include "npc.h"
 
-#include <vector>
-
-class Player {
+class Player : public Entity {
     public:
+        void update(Map& map, std::vector<NPC*> NPCs);
+        
         Player(Graphics& graphics, int x, int y, const std::string& file_path);
-        ~Player();
-
-        void draw(Graphics& graphics, SDL_Rect& camera);
-        void draw(Graphics& graphics);
-        void update(Map& map);
-
-        void move(int direction);
-        void stop();
-        void turn(int direction);
-        
-        int getMoveTime() { return _move_time; }
-        int getCurrentTile() { return _current_tile; }
-
-        enum MotionType {
-            WALKING,
-            STANDING
-        };
-
-        enum DirectionFacing {
-            NORTH,
-            SOUTH,
-            WEST,
-            EAST
-        };
-
-        SDL_Rect getPlayerRect() { return _player_rect; }
-
-    private:
-        int getSpriteID();
-
-        DirectionFacing _direction_facing;
-        MotionType _motion_type;
-        
-        bool checkCollision(Map& map);
-        
-        int _move_time, _speed, _frames_to_cross_one_tile, _current_tile;
-        std::vector<Sprite*> _sprites;
-        SDL_Rect _player_rect;
 };
 
 #endif // PLAYER_H

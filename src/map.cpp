@@ -7,13 +7,9 @@
 */
 
 #include "map.h"
-#include "constants.cpp"
+#include "constants.h"
 #include "SDL2/SDL.h"
 #include <stdio.h>
-
-namespace {
-    const int tileSize = 16;
-}
 
 // Initialize the  _map class
 Map::Map(const std::string& file_path, const int width, const int height) {
@@ -25,16 +21,6 @@ Map::Map(const std::string& file_path, const int width, const int height) {
     mTotalSize = 0;
     
     _map.resize(mMapRect.h);
-
-   for (int i = 0; i < mMapRect.h; i++) {
-        _map[i].resize(mMapRect.w);
-   }
-   
-   for (int i = 0; i < mMapRect.h; i++) {
-       for (int j = 0; j < mMapRect.w; j++) {
-            _map[i][j] = 0;
-       }
-   }
     
     FILE *fp;
     
@@ -47,7 +33,9 @@ Map::Map(const std::string& file_path, const int width, const int height) {
     
     for (int y = 0; y < mMapRect.h; y++) {
         for (int x = 0; x < mMapRect.w; x++) {
-            fscanf(fp, "%d", &_map[y][x]);
+            int tile_id;
+            fscanf(fp, "%d", &tile_id);
+            _map[y].push_back(new Tile(x * Constants::TILE_SIZE, y * Constants::TILE_SIZE, tile_id));
         }
     }
     
@@ -58,7 +46,7 @@ Map::Map(const std::string& file_path, const int width, const int height) {
 void Map::draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera) {
     for (int i = 0; i < mMapRect.w; i++) {
         for (int j = 0; j < mMapRect.h; j++) {
-            tileset.draw(graphics, -camera.x + (i * tileSize), -camera.y + (j * tileSize),  _map[j][i]);
+            tileset.draw(graphics, -camera.x + (i * Constants::TILE_SIZE), -camera.y + (j * Constants::TILE_SIZE),  _map[j][i]->getTileID());
         }
     }
 }

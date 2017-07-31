@@ -11,7 +11,7 @@
 #include "input.h"
 #include "camera.h"
 #include "graphics.h"
-#include "constants.cpp"
+#include "constants.h"
 #include "text.h"
 
 #include <SDL2/SDL.h>
@@ -30,8 +30,6 @@ namespace {
     
     bool running = true;
 }
-
-int Game::kTileSize = 16;
 
 Game::Game() {
     SDL_Init(SDL_INIT_VIDEO);   // Initialize SDL
@@ -102,10 +100,7 @@ void Game::eventLoop() {
 }
 
 void Game::update() {
-    oPlayer->update(*oMap);
-    
-    oNPCS[0]->move(1);
-    oNPCS[1]->move(3);
+    oPlayer->update(*oMap, oNPCS);
     
     for (int i = 0; i < oNPCS.size(); i++) {
         oNPCS[i]->update(*oMap);
@@ -123,16 +118,17 @@ void Game::draw(Graphics& graphics) {
         oNPCS[i]->draw(graphics, oCamera->getCameraRect());
     }
     
-    oText->print(graphics, 0, 0, std::to_string(oPlayer->getPlayerRect().x));
-    oText->print(graphics, 0, 8, std::to_string(oPlayer->getPlayerRect().y));
+    oText->print(graphics, 0, 0, std::to_string(oPlayer->getEntityRect().x));
+    oText->print(graphics, 0, 8, std::to_string(oPlayer->getEntityRect().y));
     oText->print(graphics, 0, 16, std::to_string(oCamera->getCameraRect().x));
     oText->print(graphics, 0, 24, std::to_string(oCamera->getCameraRect().y));
     oText->print(graphics, 0, 32, std::to_string(fps));
     oText->print(graphics, 0, 40, std::to_string(oPlayer->getMoveTime()));
     oText->print(graphics, 0, 48, std::to_string(oPlayer->getCurrentTile()));
+    
     graphics.present();                                                 // Present the renderer
-    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", oPlayer->getPlayerRect().x, oPlayer->getPlayerRect().y, oCamera->getCameraRect().x, oCamera->getCameraRect().y);
-    printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getPlayerRect().x - oCamera->getCameraRect().x, oPlayer->getPlayerRect().y - oCamera->getCameraRect().y);
+    printf("PLAYER_X: %i\nPLAYER_Y: %i\nCAMERA_X: %i\nCAMERA_Y: %i\n", oPlayer->getEntityRect().x, oPlayer->getEntityRect().y, oCamera->getCameraRect().x, oCamera->getCameraRect().y);
+    printf("PLAYER_X_CAMERA: %i\nPLAYER_Y_CAMERA: %i\n\n", oPlayer->getEntityRect().x - oCamera->getCameraRect().x, oPlayer->getEntityRect().y - oCamera->getCameraRect().y);
 }
 
 void Game::input() {

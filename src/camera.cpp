@@ -29,8 +29,8 @@ Camera::Camera() {
 
 void Camera::update(Player& player, SDL_Rect& mapRect) {
 
-    mCameraRect.x = round(player.getPlayerRect().x - 80);
-    mCameraRect.y = round(player.getPlayerRect().y - 60);
+    mCameraRect.x = round(player.getEntityRect().x - 80);
+    mCameraRect.y = round(player.getEntityRect().y - 60);
 
     if (mCameraRect.x < 0) {
         mCameraRect.x = 0;

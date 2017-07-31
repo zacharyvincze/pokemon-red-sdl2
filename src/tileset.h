@@ -1,5 +1,5 @@
-#ifndef TILE_H
-#define TILE_H
+#ifndef TILESET_H
+#define TILESET_H
 
 #include "graphics.h"
 
