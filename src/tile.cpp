@@ -8,3 +8,7 @@ Tile::Tile(int x, int y, int tile_id) {
     _tile_rect.w = Constants::TILE_SIZE;
     _tile_rect.h = Constants::TILE_SIZE;
 }
+
+Tile::~Tile() {
+    _tile_id = 0;
+}

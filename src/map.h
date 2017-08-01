@@ -8,6 +8,7 @@
 class Map {
     public:
         Map(const std::string& file_path, const int width, const int height);
+        ~Map();
 
         SDL_Rect& getMapRect() { return mMapRect; }
         std::vector<Tile*> getMap() { return _map; }

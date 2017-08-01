@@ -67,7 +67,7 @@ void Entity::update(Map& map) {
         }
     }
     
-    if (checkCollision(map)) {
+    if (touchesWall(map.getMap())) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
             case SOUTH: _entity_rect.y -= _speed; break;
@@ -126,12 +126,36 @@ void Entity::turn(int direction) {
     }
 }
 
-bool Entity::checkCollision(Map& map) {
-    // Map edge collisions
-    if (_entity_rect.x < 0) return true;
-    if (_entity_rect.x > (map.getMapRect().w - 1) * Constants::TILE_SIZE) return true;
-    if (_entity_rect.y < 0) return true;
-    if (_entity_rect.y > (map.getMapRect().h - 1) * Constants::TILE_SIZE) return true;
+bool Entity::checkCollision(SDL_Rect a, SDL_Rect b) {
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+    
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+    
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
+    
+    if (bottomA <= topB) return false;
+    if (topA >= bottomB) return false;
+    if (rightA <= leftB) return false;
+    if (leftA >= rightB) return false;
+    
+    return true;
+}
+
+bool Entity::touchesWall(std::vector<Tile*> tiles) {
+    for (int i = 0; i < tiles.size(); i++) {
+        if (tiles[i]->getTileID() == 6) {
+            if (checkCollision(_entity_rect, tiles[i]->getTileRect())) return true;
+        }
+    }
     
     return false;
 }

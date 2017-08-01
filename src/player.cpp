@@ -18,7 +18,7 @@ void Player::update(Map &map, std::vector<NPC*> NPCs) {
         }
     }
     
-    if (checkCollision(map)) {
+    if (touchesWall(map.getMap())) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
             case SOUTH: _entity_rect.y -= _speed; break;

@@ -40,6 +40,12 @@ Map::Map(const std::string& file_path, const int width, const int height) {
     fclose(fp);
 }
 
+Map::~Map() {
+    for (std::vector<Tile*>::iterator i = _map.begin(); i != _map.end(); i++) {
+        delete (*i);
+    }
+}
+
 // Draw the  _map using the tilset
 void Map::draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera) {
     for (int i = 0; i < _map.size(); i++) {
