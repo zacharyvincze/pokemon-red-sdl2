@@ -20,8 +20,6 @@ Map::Map(const std::string& file_path, const int width, const int height) {
     mMapRect.y = 0;
     mTotalSize = 0;
     
-    _map.resize(mMapRect.h);
-    
     FILE *fp;
     
     fp = fopen(file_path.c_str(), "rb");
@@ -35,7 +33,7 @@ Map::Map(const std::string& file_path, const int width, const int height) {
         for (int x = 0; x < mMapRect.w; x++) {
             int tile_id;
             fscanf(fp, "%d", &tile_id);
-            _map[y].push_back(new Tile(x * Constants::TILE_SIZE, y * Constants::TILE_SIZE, tile_id));
+            _map.push_back(new Tile(x * Constants::TILE_SIZE, y * Constants::TILE_SIZE, tile_id));
         }
     }
     
@@ -44,11 +42,9 @@ Map::Map(const std::string& file_path, const int width, const int height) {
 
 // Draw the  _map using the tilset
 void Map::draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera) {
-    for (int i = 0; i < mMapRect.w; i++) {
-        for (int j = 0; j < mMapRect.h; j++) {
-            if (checkCollision(_map[j][i]->getTileRect(), camera))
-                tileset.draw(graphics, -camera.x + (_map[j][i]->getTileRect().x), -camera.y + (_map[j][i]->getTileRect().y),  _map[j][i]->getTileID());
-        }
+    for (int i = 0; i < _map.size(); i++) {
+        if (checkCollision(_map[i]->getTileRect(), camera))
+            tileset.draw(graphics, -camera.x + (_map[i]->getTileRect().x), -camera.y + (_map[i]->getTileRect().y),  _map[i]->getTileID());
     }
 }
 

@@ -10,14 +10,12 @@ class Map {
         Map(const std::string& file_path, const int width, const int height);
 
         SDL_Rect& getMapRect() { return mMapRect; }
-        std::vector<std::vector<Tile*> > getMap() { return _map; }
-        
-        Tile* getTile(int x, int y) { return _map[y][x]; }
+        std::vector<Tile*> getMap() { return _map; }
         
         void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
 
     private:
-         std::vector<std::vector<Tile*> > _map;
+         std::vector<Tile*> _map;
          bool checkCollision(SDL_Rect a, SDL_Rect b);
 
          int mTotalSize;

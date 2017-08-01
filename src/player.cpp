@@ -18,8 +18,6 @@ void Player::update(Map &map, std::vector<NPC*> NPCs) {
         }
     }
     
-    _current_tile = map.getTile(_entity_rect.x / 16, _entity_rect.y / 16)->getTileID();
-    
     if (checkCollision(map)) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
