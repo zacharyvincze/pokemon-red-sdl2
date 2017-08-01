@@ -18,6 +18,7 @@ class Map {
 
     private:
          std::vector<std::vector<Tile*> > _map;
+         bool checkCollision(SDL_Rect a, SDL_Rect b);
 
          int mTotalSize;
          SDL_Rect mMapRect;

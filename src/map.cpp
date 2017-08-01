@@ -46,7 +46,32 @@ Map::Map(const std::string& file_path, const int width, const int height) {
 void Map::draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera) {
     for (int i = 0; i < mMapRect.w; i++) {
         for (int j = 0; j < mMapRect.h; j++) {
-            tileset.draw(graphics, -camera.x + (i * Constants::TILE_SIZE), -camera.y + (j * Constants::TILE_SIZE),  _map[j][i]->getTileID());
+            if (checkCollision(_map[j][i]->getTileRect(), camera))
+                tileset.draw(graphics, -camera.x + (_map[j][i]->getTileRect().x), -camera.y + (_map[j][i]->getTileRect().y),  _map[j][i]->getTileID());
         }
     }
+}
+
+bool Map::checkCollision(SDL_Rect a, SDL_Rect b) {
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+    
+    leftA = a.x;
+    rightA = a.x + a.w;
+    topA = a.y;
+    bottomA = a.y + a.h;
+    
+    leftB = b.x;
+    rightB = b.x + b.w;
+    topB = b.y;
+    bottomB = b.y + b.h;
+    
+    if (bottomA <= topB) return false;
+    if (topA >= bottomB) return false;
+    if (rightA <= leftB) return false;
+    if (leftA >= rightB) return false;
+    
+    return true;
 }
