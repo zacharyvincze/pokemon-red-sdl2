@@ -9,6 +9,9 @@ class Player : public Entity {
         void update(Map& map, std::vector<NPC*> NPCs);
         
         Player(Graphics& graphics, int x, int y, const std::string& file_path);
+        
+    private:
+        bool touchesWall(Map& map, std::vector<NPC*> NPCs);
 };
 
 #endif // PLAYER_H
