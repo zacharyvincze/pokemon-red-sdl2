@@ -37,12 +37,12 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    oMap = new Map("src/data/maps/pallet_town.dat", 20, 18);
-    oPlayer = new Player(*oGraphics, 1, 2, "gfx/sprites/red.png");
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
+    oMap = new Map("src/data/maps/pokecenter.dat", "src/data/maps/pokecenter.tilecol", *oTileset, 28, 16);
+    oPlayer = new Player(*oGraphics, 1, 3, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/tileset.png");
-    oNPCS.push_back(new NPC(*oGraphics, 2, 2, "gfx/sprites/boy.png", "Why hello there!"));
+    oNPCS.push_back(new NPC(*oGraphics, 2, 4, "gfx/sprites/boy.png", "Why hello there!"));
     oNPCS.push_back(new NPC(*oGraphics, 2, 3, "gfx/sprites/red.png", "Why hello there!"));
     
     eventLoop();                // Run the game's event loop
@@ -111,7 +111,7 @@ void Game::update() {
 
 void Game::draw(Graphics& graphics) {
     graphics.clear();                                                   // Clear the renderer
-    oMap->draw(graphics, *oTileset, oCamera->getCameraRect());         // Draw the map
+    oMap->draw(graphics, oCamera->getCameraRect());         // Draw the map
     oPlayer->draw(graphics, oCamera->getCameraRect());
     
     for (int i = 0; i < oNPCS.size(); i++) {

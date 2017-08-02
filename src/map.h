@@ -7,17 +7,19 @@
 
 class Map {
     public:
-        Map(const std::string& file_path, const int width, const int height);
+        Map(const std::string& map_path, const std::string& col_path, Tileset& tileset, const int width, const int height);
         ~Map();
 
         SDL_Rect& getMapRect() { return mMapRect; }
         std::vector<Tile*> getMap() { return _map; }
         
-        void draw(Graphics& graphics, Tileset& tileset, SDL_Rect& camera);
+        void draw(Graphics& graphics, SDL_Rect& camera);
 
     private:
          std::vector<Tile*> _map;
          bool checkCollision(SDL_Rect a, SDL_Rect b);
+         
+         Tileset* _tileset;
 
          int mTotalSize;
          SDL_Rect mMapRect;

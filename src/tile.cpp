@@ -1,7 +1,8 @@
 #include "tile.h"
 #include "constants.h"
 
-Tile::Tile(int x, int y, int tile_id) {
+Tile::Tile(int x, int y, int tile_id, int is_wall) {
+    _is_wall = is_wall;
     _tile_id = tile_id;
     _tile_rect.x = x;
     _tile_rect.y = y;

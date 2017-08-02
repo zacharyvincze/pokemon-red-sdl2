@@ -18,12 +18,13 @@ void Player::update(Map &map, std::vector<NPC*> NPCs) {
         }
     }
     
-    if (touchesWall(map.getMap())) {
+    if (touchesWall(map)) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
             case SOUTH: _entity_rect.y -= _speed; break;
             case WEST: _entity_rect.x += _speed; break;
             case EAST: _entity_rect.x -= _speed; break;
         }
+        _move_time = 0;
     }
 }

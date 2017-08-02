@@ -26,7 +26,7 @@ namespace {
 // Initialize SDL and tweak some settings
 Graphics::Graphics() {
     mWindow = SDL_CreateWindow("Pokemon Red", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, kScreenWidth, kScreenHeight, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(mRenderer, kRendererWidth, kRendererHeight);   // Set renderer height and width
     SDL_ShowCursor(SDL_DISABLE);                                            // Prevent the cursor from being shown
 }

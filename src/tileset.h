@@ -12,6 +12,9 @@ class Tileset {
         ~Tileset();
 
         void draw(Graphics& graphics, int x, int y, int tileID);
+        
+        int getWidth() { return mWidth; }
+        int getHeight() { return mHeight; }
 
     private:
         SDL_Texture* mTilesheet;

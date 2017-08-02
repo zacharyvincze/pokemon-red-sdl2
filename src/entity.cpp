@@ -16,14 +16,14 @@ namespace {
 
     const int numWalkFrames = 4;
     const int numSidewayWalkFrames = 2;
-    const int walkFps = 10;                // Change frames after certain amount of frames have passed
+    const int walkFps = 8;                // Change frames after certain amount of frames have passed
 }
 
 Entity::Entity(Graphics& graphics, int x, int y, const std::string& file_path) {
-    _entity_rect.x = x * Constants::TILE_SIZE;
-    _entity_rect.y = y * Constants::TILE_SIZE;
-    _entity_rect.w = Constants::TILE_SIZE;
-    _entity_rect.h = Constants::TILE_SIZE;
+    _entity_rect.x = x * Constants::PLAYER_SIZE;
+    _entity_rect.y = y * Constants::PLAYER_SIZE;
+    _entity_rect.w = Constants::PLAYER_SIZE;
+    _entity_rect.h = Constants::PLAYER_SIZE;
     
     _move_time = 0;
     _frames_to_cross_one_tile = 16;
@@ -36,16 +36,16 @@ Entity::Entity(Graphics& graphics, int x, int y, const std::string& file_path) {
 
     // Load sprites
     // ----- STATIC SPRITES
-    _sprites.push_back(new Sprite(graphics, file_path, 0, 0, Constants::TILE_SIZE, Constants::TILE_SIZE));
-    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::TILE_SIZE, Constants::TILE_SIZE, Constants::TILE_SIZE));
-    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::TILE_SIZE * 2, Constants::TILE_SIZE, Constants::TILE_SIZE));
-    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::TILE_SIZE * 3, Constants::TILE_SIZE, Constants::TILE_SIZE));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, 0, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::PLAYER_SIZE * 2, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE));
+    _sprites.push_back(new Sprite(graphics, file_path, 0, Constants::PLAYER_SIZE * 3, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE));
 
     // ----- ANIMATED SPRITES
-    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, 0, Constants::TILE_SIZE, Constants::TILE_SIZE, walkFps, numWalkFrames));
-    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::TILE_SIZE, Constants::TILE_SIZE, Constants::TILE_SIZE, walkFps, numWalkFrames));
-    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::TILE_SIZE * 2, Constants::TILE_SIZE, Constants::TILE_SIZE, walkFps, numSidewayWalkFrames));
-    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::TILE_SIZE * 3, Constants::TILE_SIZE, Constants::TILE_SIZE, walkFps, numSidewayWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, 0, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, walkFps, numWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, walkFps, numWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::PLAYER_SIZE * 2, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, walkFps, numSidewayWalkFrames));
+    _sprites.push_back(new AnimatedSprite(graphics, file_path, 0, Constants::PLAYER_SIZE * 3, Constants::PLAYER_SIZE, Constants::PLAYER_SIZE, walkFps, numSidewayWalkFrames));
 }
 
 Entity::~Entity() {
@@ -67,13 +67,14 @@ void Entity::update(Map& map) {
         }
     }
     
-    if (touchesWall(map.getMap())) {
+    if (touchesWall(map)) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
             case SOUTH: _entity_rect.y -= _speed; break;
             case WEST: _entity_rect.x += _speed; break;
             case EAST: _entity_rect.x -= _speed; break;
         }
+        _move_time = 0;
     }
 }
 
@@ -150,12 +151,18 @@ bool Entity::checkCollision(SDL_Rect a, SDL_Rect b) {
     return true;
 }
 
-bool Entity::touchesWall(std::vector<Tile*> tiles) {
-    for (int i = 0; i < tiles.size(); i++) {
-        if (tiles[i]->getTileID() == 6) {
-            if (checkCollision(_entity_rect, tiles[i]->getTileRect())) return true;
+bool Entity::touchesWall(Map& map) {
+    for (int i = 0; i < map.getMap().size(); i++) {
+        if (map.getMap()[i]->isWall() == 1) {
+            if (checkCollision(_entity_rect, map.getMap()[i]->getTileRect())) return true;
         }
     }
+    
+    // Map edge detection
+    if (_entity_rect.x < map.getMapRect().x * 8) return true;
+    if (_entity_rect.y < map.getMapRect().y * 8) return true;
+    if (_entity_rect.x > map.getMapRect().x * 8 + (map.getMapRect().w - 2) * 8) return true;
+    if (_entity_rect.y > map.getMapRect().y * 8 + (map.getMapRect().h - 2) * 8) return true;
     
     return false;
 }
