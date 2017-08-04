@@ -11,13 +11,13 @@ class Map {
         ~Map();
 
         SDL_Rect& getMapRect() { return mMapRect; }
-        std::vector<Tile*> getMap() { return _map; }
+        std::vector<std::vector<Tile*> > getMap() { return _map; }
         
         void draw(Graphics& graphics, SDL_Rect& camera);
 
     private:
-         std::vector<Tile*> _map;
-         bool checkCollision(SDL_Rect a, SDL_Rect b);
+         std::vector<std::vector<Tile*> > _map;
+         bool checkCollision(int x, int y, SDL_Rect camera);
          
          Tileset* _tileset;
 

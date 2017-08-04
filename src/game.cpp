@@ -37,8 +37,8 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
-    oMap = new Map("src/data/maps/pokecenter.dat", "src/data/maps/pokecenter.tilecol", *oTileset, 28, 16);
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png");
+    oMap = new Map("src/data/maps/pallet_town.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 40, 36);
     oPlayer = new Player(*oGraphics, 1, 3, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");

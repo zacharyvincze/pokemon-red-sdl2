@@ -45,11 +45,13 @@ Map::Map(const std::string& map_path, const std::string& col_path, Tileset& tile
         col_buffer.push_back(int(tile_id));
     }
     
+    _map.resize(mMapRect.w);
+    
     for (int y = 0; y < mMapRect.h; y++) {
         for (int x = 0; x < mMapRect.w; x++) {
             int tile_id;
             fscanf(map_file, "%d", &tile_id);
-            _map.push_back(new Tile(x * Constants::TILE_SIZE, y * Constants::TILE_SIZE, tile_id, col_buffer[tile_id]));
+            _map[y].push_back(new Tile(tile_id, col_buffer[tile_id]));
         }
     }
     
@@ -58,39 +60,28 @@ Map::Map(const std::string& map_path, const std::string& col_path, Tileset& tile
 }
 
 Map::~Map() {
-    for (std::vector<Tile*>::iterator i = _map.begin(); i != _map.end(); i++) {
-        delete (*i);
+    for (int y = 0; y < _map.size(); y++) {
+        for (int x = 0; x < _map[y].size(); x++) {
+            delete _map[y][x];
+        }
     }
 }
 
 // Draw the  _map using the tilset
 void Map::draw(Graphics& graphics, SDL_Rect& camera) {
-    for (int i = 0; i < _map.size(); i++) {
-        if (checkCollision(_map[i]->getTileRect(), camera))
-            _tileset->draw(graphics, -camera.x + (_map[i]->getTileRect().x), -camera.y + (_map[i]->getTileRect().y),  _map[i]->getTileID());
+    for (int y = 0; y < _map.size(); y++) {
+        for (int x = 0; x < _map[y].size(); x++) {
+            if (checkCollision(x, y, camera))
+                _tileset->draw(graphics, -camera.x + (x * Constants::TILE_SIZE), -camera.y + (y * Constants::TILE_SIZE),  _map[y][x]->getTileID());
+        }
     }
 }
 
-bool Map::checkCollision(SDL_Rect a, SDL_Rect b) {
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
-    
-    leftA = a.x;
-    rightA = a.x + a.w;
-    topA = a.y;
-    bottomA = a.y + a.h;
-    
-    leftB = b.x;
-    rightB = b.x + b.w;
-    topB = b.y;
-    bottomB = b.y + b.h;
-    
-    if (bottomA <= topB) return false;
-    if (topA >= bottomB) return false;
-    if (rightA <= leftB) return false;
-    if (leftA >= rightB) return false;
+bool Map::checkCollision(int x, int y, SDL_Rect camera) {
+    if ((y + 1) * Constants::TILE_SIZE <= camera.y) return false;
+    if (y * Constants::TILE_SIZE >= camera.y + camera.h) return false;
+    if ((x + 1) * Constants::TILE_SIZE <= camera.x) return false;
+    if (x * Constants::TILE_SIZE >= camera.x + camera.w) return false;
     
     return true;
 }

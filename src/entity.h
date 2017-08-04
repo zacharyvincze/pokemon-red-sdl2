@@ -41,8 +41,6 @@ class Entity {
     protected:
         SDL_Rect _entity_rect;
         int _move_time, _speed, _frames_to_cross_one_tile, _current_tile;
-        bool checkCollision(SDL_Rect a, SDL_Rect b);
-        bool touchesWall(Map& map);
         DirectionFacing _direction_facing;
         MotionType _motion_type;
         int getSpriteID();

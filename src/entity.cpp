@@ -66,16 +66,6 @@ void Entity::update(Map& map) {
             case EAST: _entity_rect.x += _speed; break;
         }
     }
-    
-    if (touchesWall(map)) {
-        switch (_direction_facing) {
-            case NORTH: _entity_rect.y += _speed; break;
-            case SOUTH: _entity_rect.y -= _speed; break;
-            case WEST: _entity_rect.x += _speed; break;
-            case EAST: _entity_rect.x -= _speed; break;
-        }
-        _move_time = 0;
-    }
 }
 
 void Entity::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -125,46 +115,6 @@ void Entity::turn(int direction) {
             case 3: _direction_facing = EAST; break;
         }
     }
-}
-
-bool Entity::checkCollision(SDL_Rect a, SDL_Rect b) {
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
-    
-    leftA = a.x;
-    rightA = a.x + a.w;
-    topA = a.y;
-    bottomA = a.y + a.h;
-    
-    leftB = b.x;
-    rightB = b.x + b.w;
-    topB = b.y;
-    bottomB = b.y + b.h;
-    
-    if (bottomA <= topB) return false;
-    if (topA >= bottomB) return false;
-    if (rightA <= leftB) return false;
-    if (leftA >= rightB) return false;
-    
-    return true;
-}
-
-bool Entity::touchesWall(Map& map) {
-    for (int i = 0; i < map.getMap().size(); i++) {
-        if (map.getMap()[i]->isWall() == 1) {
-            if (checkCollision(_entity_rect, map.getMap()[i]->getTileRect())) return true;
-        }
-    }
-    
-    // Map edge detection
-    if (_entity_rect.x < map.getMapRect().x * 8) return true;
-    if (_entity_rect.y < map.getMapRect().y * 8) return true;
-    if (_entity_rect.x > map.getMapRect().x * 8 + (map.getMapRect().w - 2) * 8) return true;
-    if (_entity_rect.y > map.getMapRect().y * 8 + (map.getMapRect().h - 2) * 8) return true;
-    
-    return false;
 }
 
 void Entity::stop() {

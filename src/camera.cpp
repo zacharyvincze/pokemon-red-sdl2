@@ -7,6 +7,7 @@
 */
 
 #include "camera.h"
+#include "constants.h"
 
 #include <cmath>
 
@@ -15,8 +16,6 @@ namespace {
     // const float kCameraSpeed = 0.06f;   // Camera movement speed
     const int kCameraWidth = 256;       // Viewport width
     const int kCameraHeight = 144;      // Viewport height
-    
-    const int tileSize = 16;
 }
 
 // Initialize the mCameraRect class
@@ -38,10 +37,10 @@ void Camera::update(Player& player, SDL_Rect& mapRect) {
     if (mCameraRect.y < 0) {
         mCameraRect.y = 0;
     }
-    if (mCameraRect.x > (mapRect.w * tileSize) - mCameraRect.w) {
-        mCameraRect.x = (mapRect.w * tileSize) - mCameraRect.w;
+    if (mCameraRect.x > (mapRect.w * Constants::TILE_SIZE) - mCameraRect.w) {
+        mCameraRect.x = (mapRect.w *  Constants::TILE_SIZE) - mCameraRect.w;
     }
-    if (mCameraRect.y > (mapRect.h * tileSize) - mCameraRect.h) {
-        mCameraRect.y = (mapRect.h * tileSize) - mCameraRect.h;
+    if (mCameraRect.y > (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h) {
+        mCameraRect.y = (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h;
     }
 }

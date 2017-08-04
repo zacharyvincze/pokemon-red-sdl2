@@ -17,34 +17,4 @@ void Player::update(Map &map, std::vector<NPC*> NPCs) {
             case EAST: _entity_rect.x += _speed; break;
         }
     }
-    
-    if (touchesWall(map, NPCs)) {
-        switch (_direction_facing) {
-            case NORTH: _entity_rect.y += _speed; break;
-            case SOUTH: _entity_rect.y -= _speed; break;
-            case WEST: _entity_rect.x += _speed; break;
-            case EAST: _entity_rect.x -= _speed; break;
-        }
-        _move_time = 0;
-    }
-}
-
-bool Player::touchesWall(Map& map, std::vector<NPC*> NPCs) {
-    for (int i = 0; i < map.getMap().size(); i++) {
-        if (map.getMap()[i]->isWall() == 1) {
-            if (checkCollision(_entity_rect, map.getMap()[i]->getTileRect())) return true;
-        }
-    }
-    
-    for (int i = 0; i < NPCs.size(); i++) {
-        if (checkCollision(_entity_rect, NPCs[i]->getEntityRect())) return true;
-    }
-    
-    // Map edge detection
-    if (_entity_rect.x < map.getMapRect().x * 8) return true;
-    if (_entity_rect.y < map.getMapRect().y * 8) return true;
-    if (_entity_rect.x > map.getMapRect().x * 8 + (map.getMapRect().w - 2) * 8) return true;
-    if (_entity_rect.y > map.getMapRect().y * 8 + (map.getMapRect().h - 2) * 8) return true;
-    
-    return false;
 }
