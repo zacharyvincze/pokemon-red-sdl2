@@ -9,6 +9,7 @@ class AnimatedSprite : public Sprite {
         AnimatedSprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height, int fps, int num_frames);
 
         void update();
+        void resetTimer() { mCurrentFrame = 0; mElapsedTime = 0; mSourceRect.x = 0;}
 
     private:
         int mFrameTime;

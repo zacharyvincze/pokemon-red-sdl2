@@ -31,16 +31,18 @@ void Camera::update(Player& player, SDL_Rect& mapRect) {
     mCameraRect.x = round(player.getEntityRect().x - 80);
     mCameraRect.y = round(player.getEntityRect().y - 60);
 
-    if (mCameraRect.x < 0) {
-        mCameraRect.x = 0;
-    }
-    if (mCameraRect.y < 0) {
-        mCameraRect.y = 0;
-    }
-    if (mCameraRect.x > (mapRect.w * Constants::TILE_SIZE) - mCameraRect.w) {
-        mCameraRect.x = (mapRect.w *  Constants::TILE_SIZE) - mCameraRect.w;
-    }
-    if (mCameraRect.y > (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h) {
-        mCameraRect.y = (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h;
+    if (!(mCameraRect.w > (mapRect.w * Constants::TILE_SIZE)) || !(mCameraRect.h > (mapRect.h * Constants::TILE_SIZE))) {
+        if (mCameraRect.x < (mapRect.x * Constants::TILE_SIZE)) {
+            mCameraRect.x = (mapRect.x * Constants::TILE_SIZE);
+        }
+        if (mCameraRect.y < (mapRect.y * Constants::TILE_SIZE)) {
+            mCameraRect.y = (mapRect.y * Constants::TILE_SIZE);
+        }
+        if (mCameraRect.x > (mapRect.w * Constants::TILE_SIZE) - mCameraRect.w) {
+            mCameraRect.x = (mapRect.w *  Constants::TILE_SIZE) - mCameraRect.w;
+        }
+        if (mCameraRect.y > (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h) {
+            mCameraRect.y = (mapRect.h *  Constants::TILE_SIZE) - mCameraRect.h;
+        }
     }
 }

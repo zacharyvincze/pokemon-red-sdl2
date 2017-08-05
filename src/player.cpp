@@ -1,4 +1,5 @@
 #include "player.h"
+#include "constants.h"
 
 Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) :
     Entity(graphics, x, y, file_path) {
@@ -16,5 +17,15 @@ void Player::update(Map &map, std::vector<NPC*> NPCs) {
             case WEST: _entity_rect.x -= _speed; break;
             case EAST: _entity_rect.x += _speed; break;
         }
+    }
+    
+    if (checkCollision(map)) {
+        switch (_direction_facing) {
+            case NORTH: _entity_rect.y += _speed; break;
+            case SOUTH: _entity_rect.y -= _speed; break;
+            case WEST: _entity_rect.x += _speed; break;
+            case EAST: _entity_rect.x -= _speed; break;
+        }
+        _move_time = 0;
     }
 }

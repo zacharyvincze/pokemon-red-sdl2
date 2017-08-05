@@ -44,6 +44,7 @@ class Entity {
         DirectionFacing _direction_facing;
         MotionType _motion_type;
         int getSpriteID();
+        bool checkCollision(Map& map);
         std::vector<Sprite*> _sprites;
 };
 

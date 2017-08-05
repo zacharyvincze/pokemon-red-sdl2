@@ -19,7 +19,7 @@
 
 // Game constants
 namespace {
-    const float frameDuration = 16;
+    const int frameDuration = 16;
     const int maxTimePerFrame = 200;
     int accumulatedTime = 0;
 
@@ -37,8 +37,10 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
+    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
     oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png");
     oMap = new Map("src/data/maps/pallet_town.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 40, 36);
+    // oMap = new Map("src/data/maps/pokecenter.dat", "gfx/tilesets/pokecenter.tilecol", *oTileset, 28, 16);
     oPlayer = new Player(*oGraphics, 1, 3, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
@@ -73,15 +75,13 @@ void Game::eventLoop() {
         currentTime = SDL_GetTicks();
         accumulatedTime += (currentTime - lastUpdateTime);
 
-        // if (accumulatedTime > maxTimePerFrame) accumulatedTime = maxTimePerFrame;
-
         input();
 
         // Update
-        //while (accumulatedTime >= frameDuration) {
-            //accumulatedTime -= frameDuration;
+        // while (accumulatedTime >= frameDuration) {
+            // accumulatedTime -= frameDuration;
             update();
-        //}
+        // }
         lastUpdateTime = SDL_GetTicks();
 
         // Render

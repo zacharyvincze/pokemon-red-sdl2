@@ -10,6 +10,7 @@ class Sprite {
     public:
         Sprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height);
         virtual void update() {}
+        virtual void resetTimer() {}
         void draw(Graphics& graphics, int x, int y);
         void close();
 

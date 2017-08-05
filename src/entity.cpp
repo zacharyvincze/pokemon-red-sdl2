@@ -66,6 +66,16 @@ void Entity::update(Map& map) {
             case EAST: _entity_rect.x += _speed; break;
         }
     }
+    
+    if (checkCollision(map)) {
+        switch (_direction_facing) {
+            case NORTH: _entity_rect.y += _speed; break;
+            case SOUTH: _entity_rect.y -= _speed; break;
+            case WEST: _entity_rect.x += _speed; break;
+            case EAST: _entity_rect.x -= _speed; break;
+        }
+        _move_time = 0;
+    }
 }
 
 void Entity::draw(Graphics& graphics, SDL_Rect& camera) {
@@ -94,6 +104,11 @@ int Entity::getSpriteID() {
 
 void Entity::move(int direction) {
     if (_move_time <= 0) {
+        // Reset timers
+        _sprites[4]->resetTimer();
+        _sprites[5]->resetTimer();
+        _sprites[6]->resetTimer();
+        _sprites[7]->resetTimer();
         switch (direction) {
             case 0: _direction_facing = NORTH; break;
             case 1: _direction_facing = SOUTH; break;
@@ -115,6 +130,17 @@ void Entity::turn(int direction) {
             case 3: _direction_facing = EAST; break;
         }
     }
+}
+
+bool Entity::checkCollision(Map& map) {
+    if (_entity_rect.x < (map.getMapRect().x * Constants::TILE_SIZE)) return true;
+    if (_entity_rect.x > (map.getMapRect().x * Constants::TILE_SIZE) + ((map.getMapRect().w - 2) * Constants::TILE_SIZE)) return true;
+    if (_entity_rect.y < (map.getMapRect().y * Constants::TILE_SIZE)) return true;
+    if (_entity_rect.y > (map.getMapRect().y * Constants::TILE_SIZE) + ((map.getMapRect().h - 2) * Constants::TILE_SIZE)) return true;
+    
+    if (map.getMap()[(_entity_rect.y / Constants::TILE_SIZE)][(_entity_rect.x / Constants::TILE_SIZE)]->isWall() == 1) return true;
+    
+    return false;
 }
 
 void Entity::stop() {

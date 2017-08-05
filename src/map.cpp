@@ -29,11 +29,13 @@ Map::Map(const std::string& map_path, const std::string& col_path, Tileset& tile
     map_file = fopen(map_path.c_str(), "rb");
     col_file = fopen(col_path.c_str(), "rb");
     
+    // Check if map file exsits
     if (map_file == NULL) {
         printf("Failed to open map %s\n", map_path.c_str());
         exit(1);
     }
     
+    // Check if collision file exists
     if (col_file == NULL) {
         printf("Failed to open col file %s\n", col_path.c_str());
         exit(1);
