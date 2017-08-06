@@ -19,12 +19,9 @@
 
 // Game constants
 namespace {
+    const int kFps = 63;    // 63 frames per second beacuse SDL in inacurate
     const int frameDuration = 16;
     const int maxTimePerFrame = 200;
-    int accumulatedTime = 0;
-
-    int lastUpdateTime = 0;
-    int currentTime = 0;
     
     float fps = 0;
     
@@ -69,11 +66,12 @@ Game::~Game() {
 }
 
 void Game::eventLoop() {
-    lastUpdateTime = SDL_GetTicks();
+    auto lastUpdateTime = std::chrono::high_resolution_clock::now();
 
     while(running) {
-        currentTime = SDL_GetTicks();
-        accumulatedTime += (currentTime - lastUpdateTime);
+        const int timeStuff = SDL_GetTicks();
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        // auto accumulatedTime += std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastUpdateTime);
 
         input();
 
@@ -82,18 +80,21 @@ void Game::eventLoop() {
             // accumulatedTime -= frameDuration;
             update();
         // }
-        lastUpdateTime = SDL_GetTicks();
+        lastUpdateTime = std::chrono::high_resolution_clock::now();
 
         // Render
         draw(*oGraphics);
 
+        auto endTime = std::chrono::high_resolution_clock::now();
+        auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - currentTime);
+
         // Cap the frame rate
-        if (SDL_GetTicks() - currentTime < frameDuration) {
-            SDL_Delay(frameDuration - (SDL_GetTicks() - currentTime));
-        }
+        auto delayDuration = std::chrono::milliseconds(1000) / kFps - elapsedTime;
+        if (delayDuration.count() >= 0)
+            SDL_Delay(delayDuration.count());
 
         // Measure frames per second
-        const float seconds_per_frame = (SDL_GetTicks() - currentTime) / 1000.0;
+        const float seconds_per_frame = (SDL_GetTicks() - timeStuff) / 1000.0;
         fps = 1 / seconds_per_frame;
         printf("fps=%f\n", fps);
     }
