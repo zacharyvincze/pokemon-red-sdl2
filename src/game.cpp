@@ -34,12 +34,13 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png");
-    oMap = new Map("src/data/maps/route_1.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 36, 72);
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
+    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png");
+    // oMap = new Map("src/data/maps/route_1.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 36, 72);
     // oMap = new Map("src/data/maps/pallet_town.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 40, 36);
     // oMap = new Map("src/data/maps/pokecenter.dat", "gfx/tilesets/pokecenter.tilecol", *oTileset, 28, 16);
-    oPlayer = new Player(*oGraphics, 8, 35, "gfx/sprites/red.png");
+    oMap = new Map("src/data/maps/pokemart.dat", "gfx/tilesets/pokecenter.tilecol", *oTileset, 16, 16);
+    oPlayer = new Player(*oGraphics, 3, 7, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
     // oNPCS.push_back(new NPC(*oGraphics, 2, 4, "gfx/sprites/boy.png", "Why hello there!"));
