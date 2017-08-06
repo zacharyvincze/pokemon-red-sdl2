@@ -47,7 +47,7 @@ Map::Map(const std::string& map_path, const std::string& col_path, Tileset& tile
         col_buffer.push_back(int(tile_id));
     }
     
-    _map.resize(mMapRect.w);
+    _map.resize(mMapRect.h);
     
     for (int y = 0; y < mMapRect.h; y++) {
         for (int x = 0; x < mMapRect.w; x++) {

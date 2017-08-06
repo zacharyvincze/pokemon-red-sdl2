@@ -7,6 +7,7 @@
 */
 
 #include "game.h"
+#include <vector>
 
 int main() {
     Game game;  // Run the game

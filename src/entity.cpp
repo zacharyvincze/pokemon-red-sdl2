@@ -139,6 +139,9 @@ bool Entity::checkCollision(Map& map) {
     if (_entity_rect.y > (map.getMapRect().y * Constants::TILE_SIZE) + ((map.getMapRect().h - 2) * Constants::TILE_SIZE)) return true;
     
     if (map.getMap()[(_entity_rect.y / Constants::TILE_SIZE)][(_entity_rect.x / Constants::TILE_SIZE)]->isWall() == 1) return true;
+    if (map.getMap()[((_entity_rect.y + _entity_rect.h - 1) / Constants::TILE_SIZE)][((_entity_rect.x + _entity_rect.w - 1) / Constants::TILE_SIZE)]->isWall() == 1) return true;
+    if (map.getMap()[((_entity_rect.y + _entity_rect.h - 1) / Constants::TILE_SIZE)][(_entity_rect.x / Constants::TILE_SIZE)]->isWall() == 1) return true;
+    if (map.getMap()[(_entity_rect.y / Constants::TILE_SIZE)][((_entity_rect.x + _entity_rect.w - 1) / Constants::TILE_SIZE)]->isWall() == 1) return true;
     
     return false;
 }
