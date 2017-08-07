@@ -5,14 +5,14 @@
 
 class Tile {
     public:
-        Tile(int tile_id, int is_wall);
+        Tile(unsigned char tile_id, unsigned char is_wall);
         ~Tile();
-        int getTileID() { return _tile_id; }
-        int isWall() { return _is_wall; }
+        unsigned char getTileID() { return _tile_id; }
+        unsigned char isWall() { return _is_wall; }
         
     private:
-        int _tile_id;
-        int _is_wall;
+        unsigned char _tile_id;
+        unsigned char _is_wall;
 };
 
 #endif // TILE_H

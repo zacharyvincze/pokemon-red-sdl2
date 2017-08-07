@@ -28,8 +28,6 @@ Entity::Entity(Graphics& graphics, int x, int y, const std::string& file_path) {
     _move_time = 0;
     _frames_to_cross_one_tile = 16;
     _speed = 16 / _frames_to_cross_one_tile;
-    
-    _current_tile = 0;
 
     _direction_facing = EAST;
     _motion_type = WALKING;

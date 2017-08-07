@@ -22,7 +22,6 @@ class Entity {
         void turn(int direction);
         
         int getMoveTime() { return _move_time; }
-        int getCurrentTile() { return _current_tile; }
 
         enum MotionType {
             WALKING,
@@ -40,11 +39,17 @@ class Entity {
         
     protected:
         SDL_Rect _entity_rect;
-        int _move_time, _speed, _frames_to_cross_one_tile, _current_tile;
+        
+        int _move_time;
+        int _speed;
+        int _frames_to_cross_one_tile;
+        
         DirectionFacing _direction_facing;
         MotionType _motion_type;
+        
         int getSpriteID();
         bool checkCollision(Map& map);
+        
         std::vector<Sprite*> _sprites;
 };
 

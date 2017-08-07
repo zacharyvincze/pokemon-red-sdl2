@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <boost/scoped_ptr.hpp>
 #include "map.h"
 #include "graphics.h"
 #include "camera.h"
@@ -26,7 +25,7 @@ class Game {
         void draw(Graphics& graphics);
         void input();
 
-        // Objects
+        // Object pointers
         Camera* oCamera;
         Tileset* oTileset;
         Map* oMap;
