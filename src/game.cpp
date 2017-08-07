@@ -29,13 +29,13 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png");
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png");
-    // oMap = new Map("src/data/maps/route_1.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 36, 72);
-    oMap = new Map("src/data/maps/viridian_city.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 80, 72);
-    // oMap = new Map("src/data/maps/pallet_town.dat", "gfx/tilesets/overworld.tilecol", *oTileset, 40, 36);
-    // oMap = new Map("src/data/maps/pokecenter.dat", "gfx/tilesets/pokecenter.tilecol", *oTileset, 28, 16);
-    // oMap = new Map("src/data/maps/pokemart.dat", "gfx/tilesets/pokecenter.tilecol", *oTileset, 16, 16);
+    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
+    // oMap = new Map("maps/route_1.dat", *oTileset, 36, 72);
+    oMap = new Map("maps/viridian_city.dat", *oTileset, 80, 72);
+    // oMap = new Map("maps/pallet_town.dat", *oTileset, 40, 36);
+    // oMap = new Map("maps/pokecenter.dat", *oTileset, 28, 16);
+    // oMap = new Map("smaps/pokemart.dat", *oTileset, 16, 16);
     oPlayer = new Player(*oGraphics, 20, 30, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");

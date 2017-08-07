@@ -1,31 +1,22 @@
-/**
-    tilemap.cpp
-    Purpose: Creates a tileset from an image
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "tileset.h"
 #include "constants.h"
 
-// Initailize the tilemap class
-Tileset::Tileset(Graphics& graphics, const std::string file_path) {
+Tileset::Tileset(Graphics& graphics, const std::string file_path, const std::string collision_path) {
     mWidth = 0;
     mHeight = 0;
-    mTilesheet = graphics.loadImage(file_path);                    // Load selected tileset
-    SDL_QueryTexture(mTilesheet, NULL, NULL, &mWidth, &mHeight);  // Get image height and width
-    mTileClips.resize((mWidth / Constants::TILE_SIZE) * (mHeight / Constants::TILE_SIZE));          // Resize the tileset vector to the image height and width
+    _collision_filepath = collision_path;
+    mTilesheet = graphics.loadImage(file_path);
+    
+    SDL_QueryTexture(mTilesheet, NULL, NULL, &mWidth, &mHeight);
 
-    int k = 0;
-
-    for (int i = 0; i < (mHeight / Constants::TILE_SIZE); i++) {      // Cycles through the image and creates cutouts
-        for (int j = 0; j < (mWidth / Constants::TILE_SIZE); j++) {   // Each tile has a specified ID
-            mTileClips[k].x = j * Constants::TILE_SIZE;               // Set tile x
-            mTileClips[k].y = i * Constants::TILE_SIZE;               // Set tile y
-            mTileClips[k].w = Constants::TILE_SIZE;                   // Standard tile width and height are 8 pixels
-            mTileClips[k].h = Constants::TILE_SIZE;
-            k++;
+    for (int y = 0; y < (mHeight / Constants::TILE_SIZE); y++) {
+        for (int x = 0; x < (mWidth / Constants::TILE_SIZE); x++) {
+            SDL_Rect source_rectangle;
+            source_rectangle.x = x * Constants::TILE_SIZE;
+            source_rectangle.y = y * Constants::TILE_SIZE;
+            source_rectangle.w = Constants::TILE_SIZE;
+            source_rectangle.h = Constants::TILE_SIZE;
+            mTileClips.push_back(source_rectangle);
         }
     }
 }
