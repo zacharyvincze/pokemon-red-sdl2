@@ -6,7 +6,7 @@ Player::Player(Graphics& graphics, int x, int y, const std::string& file_path) :
 
 }
 
-void Player::update(Map &map, std::vector<NPC*> NPCs) {
+void Player::update(Map &map, std::map<std::string, NPC*> NPC) {
     _sprites[getSpriteID()]->update();
     
     if (_move_time > 0) {

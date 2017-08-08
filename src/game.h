@@ -11,6 +11,7 @@
 
 #include <chrono>
 #include <vector>
+#include <map>
 
 class Game {
     public:
@@ -34,7 +35,7 @@ class Game {
         Graphics* oGraphics;
         Input* oInput;
         
-        std::vector<NPC*> oNPCS;
+        std::map<std::string, NPC*> oNPC;
         
         SDL_Event event;
 };

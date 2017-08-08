@@ -39,8 +39,7 @@ Game::Game() {
     oPlayer = new Player(*oGraphics, 20, 30, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
-    // oNPCS.push_back(new NPC(*oGraphics, 2, 4, "gfx/sprites/boy.png", "Why hello there!"));
-    // oNPCS.push_back(new NPC(*oGraphics, 2, 3, "gfx/sprites/red.png", "Why hello there!"));
+    oNPC["BOY"] = new NPC(*oGraphics, 21, 30, "gfx/sprites/boy.png", "What's up?");
     
     eventLoop();                // Run the game's event loop
 }
@@ -55,8 +54,8 @@ Game::~Game() {
     delete oGraphics;
     delete oInput;
     
-    for (std::vector<NPC*>::iterator i = oNPCS.begin(); i != oNPCS.end(); i++) {
-        delete (*i);
+    for (std::map<std::string, NPC*>::iterator i = oNPC.begin(); i != oNPC.end(); i++) {
+        delete (i->second);
     }
     
     IMG_Quit();
@@ -99,10 +98,10 @@ void Game::eventLoop() {
 }
 
 void Game::update() {
-    oPlayer->update(*oMap, oNPCS);
+    oPlayer->update(*oMap, oNPC);
     
-    for (int i = 0; i < oNPCS.size(); i++) {
-        oNPCS[i]->update(*oMap);
+    for (std::map<std::string, NPC*>::iterator i = oNPC.begin(); i != oNPC.end(); i++) {
+        i->second->update(*oMap);
     }
     
     oCamera->update(*oPlayer, oMap->getMapRect());   // Update the oCamera's position
@@ -113,8 +112,8 @@ void Game::draw(Graphics& graphics) {
     oMap->draw(graphics, oCamera->getCameraRect());         // Draw the map
     oPlayer->draw(graphics, oCamera->getCameraRect());
     
-    for (int i = 0; i < oNPCS.size(); i++) {
-        oNPCS[i]->draw(graphics, oCamera->getCameraRect());
+    for (std::map<std::string, NPC*>::iterator i = oNPC.begin(); i != oNPC.end(); i++) {
+        i->second->draw(graphics, oCamera->getCameraRect());
     }
     
     oText->print(graphics, 0, 0, std::to_string(oPlayer->getEntityRect().x));
