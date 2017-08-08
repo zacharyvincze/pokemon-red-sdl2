@@ -36,6 +36,7 @@ class Game {
         Input* oInput;
         
         std::map<std::string, NPC*> oNPC;
+    
         
         SDL_Event event;
 };

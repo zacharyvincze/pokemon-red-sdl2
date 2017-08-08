@@ -16,13 +16,13 @@ class Tileset {
         int getWidth() { return mWidth; }
         int getHeight() { return mHeight; }
         
-        std::string getCollisionFilePath() { return _collision_filepath; }
+        std::vector<int> getCollisionBuffer() { return _collision_buffer; }
 
     private:
         SDL_Texture* mTilesheet;
         std::vector<SDL_Rect> mTileClips;
         
-        std::string _collision_filepath;
+        std::vector<int> _collision_buffer;
 
         int mWidth;
         int mHeight;

@@ -22,42 +22,25 @@ Map::Map(const std::string& map_path, Tileset& tileset, const int width, const i
     _tileset = &tileset;
     
     FILE *map_file;
-    FILE *col_file;
-    std::vector<int> col_buffer;
     
     map_file = fopen(map_path.c_str(), "rb");
-    col_file = fopen(_tileset->getCollisionFilePath().c_str(), "rb");
     
     // Check if map file exsits
     if (map_file == NULL) {
         printf("Failed to open map %s\n", map_path.c_str());
         exit(1);
     }
-    
-    // Check if collision file exists
-    if (col_file == NULL) {
-        printf("Failed to open col file %s\n", _tileset->getCollisionFilePath().c_str());
-        exit(1);
-    }
-    
-    for (int i = 0; i < (_tileset->getWidth() / Constants::TILE_SIZE) * (_tileset->getHeight() / Constants::TILE_SIZE); i++) {
-        int tile_id;
-        fscanf(col_file, "%d", &tile_id);
-        col_buffer.push_back(tile_id);
-    }
-    
     _map.resize(mMapRect.h);
     
     for (int y = 0; y < mMapRect.h; y++) {
         for (int x = 0; x < mMapRect.w; x++) {
             int tile_id;
             fscanf(map_file, "%d", &tile_id);
-            _map[y].push_back(new Tile(tile_id, col_buffer[tile_id]));
+            _map[y].push_back(new Tile(tile_id, _tileset->getCollisionBuffer()[tile_id]));
         }
     }
     
     fclose(map_file);
-    fclose(col_file);
 }
 
 Map::~Map() {
