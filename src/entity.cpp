@@ -1,11 +1,3 @@
-/**
-    player.cpp
-    Purpose: Manage player logic and sprites
-
-    @author: Zachary Vincze
-    @version: 28/05/2017
-*/
-
 #include "entity.h"
 #include "constants.h"
 

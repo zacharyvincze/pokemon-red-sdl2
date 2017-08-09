@@ -1,11 +1,3 @@
-/**
-    game.cpp
-    Purpose: Main class for game logic
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "game.h"
 #include "constants.h"
 

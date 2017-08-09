@@ -1,11 +1,3 @@
-/**
-    graphics.cpp
-    Purpose: Handles everything to do with graphics
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "graphics.h"
 #include <SDL2/SDL_image.h>
 

@@ -1,11 +1,3 @@
-/**
-    sprite.cpp
-    Purpose: Handles sprites in the game
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "sprite.h"
 
 // Initailize the sprite class

@@ -1,11 +1,3 @@
-/**
-    input.cpp
-    Purpose: Handles the game input
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "input.h"
 
 // Begin new input frame (reset everything)

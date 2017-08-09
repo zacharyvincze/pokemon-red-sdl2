@@ -1,11 +1,3 @@
-/**
-    animated_sprite.cpp
-    Purpose: Handles the animation of sprites
-
-    @author Zachary Vincze
-    @version 21/05/2017
-*/
-
 #include "animated_sprite.h"
 
 AnimatedSprite::AnimatedSprite(Graphics& graphics, const std::string& file_path, int source_x, int source_y, int width, int height, int fps, int num_frames) :

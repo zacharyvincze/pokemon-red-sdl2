@@ -11,6 +11,36 @@ Text::Text(Graphics& graphics, const std::string& file_path) {
     mSourceRect.y = 0;
     mSourceRect.w = charWidth;
     mSourceRect.h = charWidth;
+    
+    std::string character_list = "ABCDEFGHIJKLMNOP";
+    
+    for (int i = 0; i < character_list.length(); i++) {
+        _characters[character_list.at(i)] = {i * charWidth, 0, charWidth, charWidth};
+    }
+    
+    character_list = "QRSTUVWXYZ():;[]";
+    
+    for (int i = 0; i < character_list.length(); i++) {
+        _characters[character_list.at(i)] = {i * charWidth, charWidth, charWidth, charWidth};
+    }
+    
+    character_list = "abcdefghijklmnop";
+    
+    for (int i = 0; i < character_list.length(); i++) {
+        _characters[character_list.at(i)] = {i * charWidth, 2 * charWidth, charWidth, charWidth};
+    }
+    
+    character_list = "qrstuvwxyz";
+    
+    for (int i = 0; i < character_list.length(); i++) {
+        _characters[character_list.at(i)] = {i * charWidth, 3 * charWidth, charWidth, charWidth};
+    }
+    
+    character_list = "$*./,^0123456789";
+    
+    for (int i = 0; i < character_list.length(); i++) {
+        _characters[character_list.at(i)] = {i * charWidth, 7 * charWidth, charWidth, charWidth};
+    }
 }
 
 Text::~Text() {
@@ -23,71 +53,7 @@ void Text::print(Graphics& graphics, int x, int y, const std::string& message) {
 
     for (int i = 0; i < message.length(); i++) {
         destinationRectangle.x = x + (i * charWidth);
-        mSourceRect.x = getXPos(message.at(i));
-        mSourceRect.y = getYPos(message.at(i));
-        graphics.render(mSpriteSheet, &mSourceRect, &destinationRectangle);
+        SDL_Rect sourceRect = _characters[message.at(i)];
+        graphics.render(mSpriteSheet, &sourceRect, &destinationRectangle);
     }
-}
-
-// TODO: I really don't like how this is being done too much.
-// There's a lot going on and I don't want to make the game run
-// any slower because it is trying to map the right text.
-int Text::getXPos(char iChar) {
-    if (iChar >= 65 && iChar <= 80) {
-        return (iChar - 65) * charWidth;
-    }
-    
-    if (iChar >= 81 && iChar <= 90) {
-        return (iChar - 81) * charWidth;
-    }
-    
-    if (iChar >= 97 && iChar <= 112) {
-        return (iChar - 97) * charWidth;
-    }
-    
-    if (iChar >= 113 && iChar <= 122) {
-        return (iChar - 113) * charWidth;
-    }
-    
-    if (iChar >= 48 && iChar <= 57) {
-        return (iChar - 42) * charWidth;
-    }
-    
-    if (iChar == 46) {
-        return 8 * charWidth;
-    }
-    
-    return 0;
-}
-
-int Text::getYPos(char iChar) {
-    if (iChar >= 65 && iChar <= 80) {
-        return 0;
-    }
-    
-    if (iChar >= 81 && iChar <= 90) {
-        return 1 * charWidth;
-    }
-    
-    if (iChar >= 97 && iChar <= 112) {
-        return 2 * charWidth;
-    }
-    
-    if (iChar >= 113 && iChar <= 122) {
-        return 3 * charWidth;
-    }
-    
-    if (iChar == 32) {
-        return 4 * charWidth;
-    }
-    
-    if (iChar >= 48 && iChar <= 57) {
-        return 7 * charWidth;
-    }
-    
-    if (iChar == 46) {
-        return 6 * charWidth;
-    }
-    
-    return 0;
 }

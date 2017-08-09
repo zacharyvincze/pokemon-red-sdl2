@@ -1,11 +1,3 @@
-/**
-     _map.cpp
-    Purpose: Manages maps in the game
-
-    @author Zachary Vincze
-    @version 14/05/2017
-*/
-
 #include "map.h"
 #include "constants.h"
 #include <stdio.h>

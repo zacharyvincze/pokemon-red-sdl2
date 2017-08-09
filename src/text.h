@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include <string>
+#include <map>
 
 class Text {
     public:
@@ -16,9 +17,8 @@ class Text {
     protected:
         SDL_Rect mSourceRect;
 
-    private:
-        int getXPos(char iChar);
-        int getYPos(char iChar);
+    private:    
+        std::map<char, SDL_Rect> _characters;
 
         SDL_Texture* mSpriteSheet;
 };
