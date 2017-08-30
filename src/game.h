@@ -25,6 +25,7 @@ class Game {
         void update();
         void draw(Graphics& graphics);
         void input();
+        double getTicks();
 
         // Object pointers
         Camera* oCamera;

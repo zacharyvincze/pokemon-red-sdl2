@@ -6,13 +6,21 @@
 
 // Game constants
 namespace {
-    const int kFps = 63;    // 63 frames per second beacuse SDL in inacurate
     const int frameDuration = 16;
     const int maxTimePerFrame = 200;
+    
+    auto time_init = std::chrono::high_resolution_clock::now();
     
     float fps = 0;
     
     bool running = true;
+}
+
+double Game::getTicks() {
+    auto time_current = std::chrono::high_resolution_clock::now();
+    auto time_diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_current - time_init);
+    double delta = time_diff.count();
+    return delta;
 }
 
 Game::Game() {
@@ -55,36 +63,24 @@ Game::~Game() {
 }
 
 void Game::eventLoop() {
-    auto lastUpdateTime = std::chrono::high_resolution_clock::now();
-
     while(running) {
-        const int timeStuff = SDL_GetTicks();
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        // auto accumulatedTime += std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastUpdateTime);
+        double time_start = getTicks();
 
         input();
-
-        // Update
-        // while (accumulatedTime >= frameDuration) {
-            // accumulatedTime -= frameDuration;
-            update();
-        // }
-        lastUpdateTime = std::chrono::high_resolution_clock::now();
-
+        update();
+        
+        auto elapsed_time = getTicks() - time_start;
+        
+        // Cap the frame rate
+        while (elapsed_time < frameDuration) {
+            elapsed_time = getTicks() - time_start;
+        }
+        
         // Render
         draw(*oGraphics);
 
-        auto endTime = std::chrono::high_resolution_clock::now();
-        auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - currentTime);
-
-        // Cap the frame rate
-        auto delayDuration = std::chrono::milliseconds(1000) / kFps - elapsedTime;
-        if (delayDuration.count() >= 0)
-            SDL_Delay(delayDuration.count());
-
         // Measure frames per second
-        const float seconds_per_frame = (SDL_GetTicks() - timeStuff) / 1000.0;
-        fps = 1 / seconds_per_frame;
+        fps = 1 / (elapsed_time / 1000);
         printf("fps=%f\n", fps);
     }
 }
