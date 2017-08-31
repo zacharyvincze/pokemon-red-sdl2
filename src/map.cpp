@@ -1,38 +1,64 @@
 #include "map.h"
 #include "constants.h"
 #include <stdio.h>
+#include <fstream>
+#include <iostream>
 
 // Initialize the  _map class
-Map::Map(const std::string& map_path, Tileset& tileset, const int width, const int height) {
+Map::Map(const std::string& map_path, Tileset& tileset) {
     
-    mMapRect.w = width;
-    mMapRect.h = height;
+    mMapRect.w = 0;
+    mMapRect.h = 0;
     mMapRect.x = 0;
     mMapRect.y = 0;
     mTotalSize = 0;
     
     _tileset = &tileset;
     
-    FILE *map_file;
+    std::ifstream stream(map_path.c_str(), std::ios::binary);
+    char * signature;
+    unsigned short map_width;
+    unsigned short map_height;
     
-    map_file = fopen(map_path.c_str(), "rb");
+    signature = new char [3];
     
     // Check if map file exsits
-    if (map_file == NULL) {
+    if (!stream.is_open()) {
         printf("Failed to open map %s\n", map_path.c_str());
         exit(1);
     }
+    
+    // Get file size
+    stream.seekg(0, std::ios::beg);
+    int begin = stream.tellg();
+    stream.seekg(0, std::ios::end);
+    int end = stream.tellg();
+    
+    stream.seekg(0, std::ios::beg);
+    stream.read(signature, 3);
+    
+    if (strcmp(signature, "MAP") != 0) {
+        printf("Could not find MAP signature.\n");
+        exit(1);
+    }
+    
+    stream.read(reinterpret_cast<char *>(&map_width), sizeof(unsigned short));
+    stream.read(reinterpret_cast<char *>(&map_height), sizeof(unsigned short));
+    mMapRect.w = map_width;
+    mMapRect.h = map_height;
+    
     _map.resize(mMapRect.h);
     
     for (int y = 0; y < mMapRect.h; y++) {
         for (int x = 0; x < mMapRect.w; x++) {
-            int tile_id;
-            fscanf(map_file, "%d", &tile_id);
+            unsigned char tile_id;
+            stream.read(reinterpret_cast<char *>(&tile_id), sizeof(unsigned char));
             _map[y].push_back(new Tile(tile_id, _tileset->getCollisionBuffer()[tile_id]));
         }
     }
     
-    fclose(map_file);
+    stream.close();
+    delete(signature);
 }
 
 Map::~Map() {

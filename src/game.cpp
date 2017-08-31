@@ -1,11 +1,13 @@
 #include "game.h"
 #include "constants.h"
+#include <thread>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
 // Game constants
 namespace {
+    const int gameFPS = 60;
     const int frameDuration = 16;
     const int maxTimePerFrame = 200;
     
@@ -29,17 +31,17 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
-    // oMap = new Map("maps/route_1.dat", *oTileset, 36, 72);
-    oMap = new Map("maps/viridian_city.dat", *oTileset, 80, 72);
-    // oMap = new Map("maps/pallet_town.dat", *oTileset, 40, 36);
-    // oMap = new Map("maps/pokecenter.dat", *oTileset, 28, 16);
-    // oMap = new Map("smaps/pokemart.dat", *oTileset, 16, 16);
-    oPlayer = new Player(*oGraphics, 20, 30, "gfx/sprites/red.png");
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
+    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
+    // oMap = new Map("maps/route_1.map", *oTileset);
+    // oMap = new Map("maps/viridian_city.map", *oTileset);
+    // oMap = new Map("maps/pallet_town.map", *oTileset);
+    // oMap = new Map("maps/pokecenter.map", *oTileset);
+    oMap = new Map("maps/pokemart.map", *oTileset);
+    oPlayer = new Player(*oGraphics, 4, 5, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
-    oNPC["BOY"] = new NPC(*oGraphics, 21, 30, "gfx/sprites/boy.png", "What's up?");
+    // oNPC["BOY"] = new NPC(*oGraphics, 21, 30, "gfx/sprites/boy.png", "What's up?");
     
     eventLoop();                // Run the game's event loop
 }
@@ -80,7 +82,7 @@ void Game::eventLoop() {
         draw(*oGraphics);
 
         // Measure frames per second
-        fps = 1 / (elapsed_time / 1000);
+        fps = 1 / ((getTicks() - time_start) / 1000);
         printf("fps=%f\n", fps);
     }
 }

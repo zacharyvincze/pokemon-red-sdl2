@@ -7,7 +7,7 @@
 
 class Map {
     public:
-        Map(const std::string& map_path, Tileset& tileset, const int width, const int height);
+        Map(const std::string& map_path, Tileset& tileset);
         ~Map();
 
         SDL_Rect& getMapRect() { return mMapRect; }
