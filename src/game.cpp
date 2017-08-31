@@ -31,14 +31,14 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
-    oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
-    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
-    // oMap = new Map("maps/route_1.map", *oTileset);
+    // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
+    oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
+    oMap = new Map("maps/route_1.map", *oTileset);
     // oMap = new Map("maps/viridian_city.map", *oTileset);
     // oMap = new Map("maps/pallet_town.map", *oTileset);
     // oMap = new Map("maps/pokecenter.map", *oTileset);
-    oMap = new Map("maps/pokemart.map", *oTileset);
-    oPlayer = new Player(*oGraphics, 4, 5, "gfx/sprites/red.png");
+    // oMap = new Map("maps/pokemart.map", *oTileset);
+    oPlayer = new Player(*oGraphics, 4, 25, "gfx/sprites/red.png");
     oCamera = new Camera();
     oText = new Text(*oGraphics, "gfx/font.png");
     // oNPC["BOY"] = new NPC(*oGraphics, 21, 30, "gfx/sprites/boy.png", "What's up?");
