@@ -1,6 +1,8 @@
 #include "tileset.h"
 #include "constants.h"
 
+#include <fstream>
+
 Tileset::Tileset(Graphics& graphics, const std::string file_path, const std::string collision_path) {
     mWidth = 0;
     mHeight = 0;
@@ -8,21 +10,40 @@ Tileset::Tileset(Graphics& graphics, const std::string file_path, const std::str
     
     SDL_QueryTexture(mTilesheet, NULL, NULL, &mWidth, &mHeight);
     
-    FILE *col_file;
-    col_file = fopen(collision_path.c_str(), "rb");
+    std::ifstream stream (collision_path.c_str(), std::ios::binary);
+    char * signature;
+    signature = new char [3];
     
-    if (col_file == NULL) {
-        printf("Failed to open col file %s\n", collision_path.c_str());
+    if (!stream.is_open()) {
+        printf("Failed to open %s\n", collision_path.c_str());
         exit(1);
     }
     
-    for (int i = 0; i < (mWidth / Constants::TILE_SIZE) * (mHeight / Constants::TILE_SIZE); i++) {
-        int tile_id;
-        fscanf(col_file, "%d", &tile_id);
+    stream.seekg(0, std::ios::beg);
+    int begin = stream.tellg();
+    stream.seekg(0, std::ios::end);
+    int end = stream.tellg();
+    
+    stream.seekg(0, std::ios::beg);
+    stream.read(signature, 3);
+    
+    if (strcmp(signature, "COL") != 0) {
+        printf("Incorrect file format.\n");
+        exit(1);
+    }
+    
+    delete(signature);
+    
+    stream.ignore(1);
+    
+    for (int i = 0; i < (end - begin) - 4; i++) {
+        unsigned char tile_id;
+        stream.read(reinterpret_cast<char *>(&tile_id), sizeof(unsigned char));
+        printf("%d", tile_id);
         _collision_buffer.push_back(tile_id);
     }
     
-    fclose(col_file);
+    stream.close();
 
     for (int y = 0; y < (mHeight / Constants::TILE_SIZE); y++) {
         for (int x = 0; x < (mWidth / Constants::TILE_SIZE); x++) {
