@@ -17,7 +17,7 @@ namespace {
 
 // Initialize SDL and tweak some settings
 Graphics::Graphics() {
-    mWindow = SDL_CreateWindow("Pokemon Red", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, kScreenWidth, kScreenHeight, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    mWindow = SDL_CreateWindow("Pokemon Red", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, kScreenWidth, kScreenHeight, SDL_WINDOW_SHOWN);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
     SDL_GL_SetSwapInterval(1);
     SDL_RenderSetLogicalSize(mRenderer, kRendererWidth, kRendererHeight);   // Set renderer height and width

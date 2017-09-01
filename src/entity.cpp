@@ -123,10 +123,10 @@ void Entity::turn(int direction) {
 }
 
 int Entity::checkCollision(Map& map) {
-    if (_entity_rect.x < (map.getMapRect().x * Constants::TILE_SIZE)) return 0;
-    if (_entity_rect.x > (map.getMapRect().x * Constants::TILE_SIZE) + ((map.getMapRect().w - 2) * Constants::TILE_SIZE)) return 0;
-    if (_entity_rect.y < (map.getMapRect().y * Constants::TILE_SIZE)) return 0;
-    if (_entity_rect.y > (map.getMapRect().y * Constants::TILE_SIZE) + ((map.getMapRect().h - 2) * Constants::TILE_SIZE)) return 0;
+    if (_entity_rect.x < (map.getMapRect().x * Constants::TILE_SIZE)) return 1;
+    if (_entity_rect.x > (map.getMapRect().x * Constants::TILE_SIZE) + ((map.getMapRect().w - 2) * Constants::TILE_SIZE)) return 1;
+    if (_entity_rect.y < (map.getMapRect().y * Constants::TILE_SIZE)) return 1;
+    if (_entity_rect.y > (map.getMapRect().y * Constants::TILE_SIZE) + ((map.getMapRect().h - 2) * Constants::TILE_SIZE)) return 1;
     
     int top_left = map.getMap()[(_entity_rect.y / Constants::TILE_SIZE)][(_entity_rect.x / Constants::TILE_SIZE)]->isWall();
     int bottom_left = map.getMap()[((_entity_rect.y + _entity_rect.h - 1) / Constants::TILE_SIZE)][(_entity_rect.x / Constants::TILE_SIZE)]->isWall();
