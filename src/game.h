@@ -8,6 +8,7 @@
 #include "input.h"
 #include "text.h"
 #include "npc.h"
+#include "window.h"
 
 #include <chrono>
 #include <vector>
@@ -35,6 +36,7 @@ class Game {
         Text* oText;
         Graphics* oGraphics;
         Input* oInput;
+        Window* oWindow;
         
         std::map<std::string, NPC*> oNPC;
     

@@ -31,6 +31,7 @@ Game::Game() {
     
     oGraphics = new Graphics();
     oInput = new Input();
+    oWindow = new Window(*oGraphics, 0, 12, 32, 6);
     // oTileset = new Tileset(*oGraphics, "gfx/tilesets/pokecenter.png", "gfx/tilesets/pokecenter.tilecol");
     oTileset = new Tileset(*oGraphics, "gfx/tilesets/overworld.png", "gfx/tilesets/overworld.tilecol");
     oMap = new Map("maps/route_1.map", *oTileset);
@@ -55,6 +56,7 @@ Game::~Game() {
     delete oTileset;
     delete oGraphics;
     delete oInput;
+    delete oWindow;
     
     for (std::map<std::string, NPC*>::iterator i = oNPC.begin(); i != oNPC.end(); i++) {
         delete (i->second);
@@ -105,6 +107,8 @@ void Game::draw(Graphics& graphics) {
     for (std::map<std::string, NPC*>::iterator i = oNPC.begin(); i != oNPC.end(); i++) {
         i->second->draw(graphics, oCamera->getCameraRect());
     }
+    
+    oWindow->draw(graphics);
     
     oText->print(graphics, 0, 0, std::to_string(oPlayer->getEntityRect().x));
     oText->print(graphics, 0, 8, std::to_string(oPlayer->getEntityRect().y));

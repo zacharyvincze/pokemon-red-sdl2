@@ -48,7 +48,7 @@ class Entity {
         MotionType _motion_type;
         
         int getSpriteID();
-        bool checkCollision(Map& map);
+        int checkCollision(Map& map);
         
         std::vector<Sprite*> _sprites;
 };

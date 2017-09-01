@@ -19,7 +19,7 @@ void Player::update(Map &map, std::map<std::string, NPC*> NPC) {
         }
     }
     
-    if (checkCollision(map)) {
+    if (checkCollision(map) == 1) {
         switch (_direction_facing) {
             case NORTH: _entity_rect.y += _speed; break;
             case SOUTH: _entity_rect.y -= _speed; break;
@@ -27,5 +27,9 @@ void Player::update(Map &map, std::map<std::string, NPC*> NPC) {
             case EAST: _entity_rect.x -= _speed; break;
         }
         _move_time = 0;
+    }
+    
+    if (checkCollision(map) == 2) {
+        // When player is in grass
     }
 }
